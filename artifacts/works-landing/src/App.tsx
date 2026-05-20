@@ -6,7 +6,7 @@ const COLORS = {
   coralSoft: "#FCE3E7",
   dark: "#2A1A2E",
   muted: "#5C4F5F",
-  warm: "#F0EBE8",
+  warm: "#F0EDF1",
   hairline: "#E0DBD7",
 };
 
