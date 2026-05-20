@@ -130,6 +130,33 @@ function CtaInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   );
 }
 
+function CtaTextarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const { className = "", style, onFocus, onBlur, rows = 4, ...rest } = props;
+  return (
+    <textarea
+      {...rest}
+      rows={rows}
+      className={`w-full px-5 py-3 rounded-2xl bg-white focus:outline-none transition-shadow resize-y ${className}`}
+      style={{
+        border: `1px solid ${COLORS.hairline}`,
+        color: COLORS.dark,
+        fontFamily: "inherit",
+        ...style,
+      }}
+      onFocus={(e) => {
+        e.currentTarget.style.boxShadow = `0 0 0 3px ${COLORS.coral}33`;
+        e.currentTarget.style.borderColor = COLORS.coral;
+        onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.borderColor = COLORS.hairline;
+        onBlur?.(e);
+      }}
+    />
+  );
+}
+
 function Diamond() {
   return (
     <span
@@ -460,7 +487,7 @@ function Landing() {
             Add meg az adataidat, és értesítünk, amikor indul.
           </p>
           <form
-            className="flex flex-col gap-3 max-w-lg mx-auto text-left"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-left"
             onSubmit={(e) => e.preventDefault()}
           >
             <CtaInput
@@ -487,7 +514,32 @@ function Landing() {
               aria-label="Email cím"
               required
             />
-            <PillButton type="submit" className="w-full mt-1">Érdekel</PillButton>
+            <CtaInput
+              type="tel"
+              name="phone"
+              placeholder="+36 30 123 4567"
+              autoComplete="tel"
+              aria-label="Telefonszám"
+              required
+            />
+            <CtaInput
+              type="number"
+              name="attendees"
+              placeholder="Érdeklődők száma (pl. 3)"
+              aria-label="Érdeklődők száma"
+              min={1}
+              required
+              className="sm:col-span-1"
+            />
+            <CtaTextarea
+              name="message"
+              placeholder="Kérdés, kontextus, bármi amit jó ha tudunk… (opcionális)"
+              aria-label="Üzenet"
+              className="sm:col-span-2"
+            />
+            <PillButton type="submit" className="w-full mt-1 sm:col-span-2">
+              Érdekel
+            </PillButton>
           </form>
         </div>
       </section>
