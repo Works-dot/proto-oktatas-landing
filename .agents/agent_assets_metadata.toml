@@ -1,0 +1,20 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "R-lRDK6fI2ZeduXjh9weD"
+uri = "file://attached_assets/stock_images/meeting_room_1.jpg"
+type = "image"
+title = "office meeting room"
+
+[[outputs]]
+id = "qBlJQlON5qfl_kQp_FDf1"
+uri = "file://attached_assets/stock_images/meeting_room_2.jpg"
+type = "image"
+title = "office meeting room"
+
+[[outputs]]
+id = "KivCVYdrh8pt7ZzVJ5riX"
+uri = "file://attached_assets/stock_images/meeting_room_3.jpg"
+type = "image"
+title = "office meeting room"

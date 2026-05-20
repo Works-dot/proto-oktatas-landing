@@ -10,6 +10,7 @@ const COLORS = {
 };
 
 const PROTO_IMG = `${import.meta.env.BASE_URL}images/proto_mockup.png`;
+const TARGYALO_IMG = `${import.meta.env.BASE_URL}images/targyalo.jpg`;
 
 function Logo({ size = "md", variant = "dark" }: { size?: "md" | "lg"; variant?: "dark" | "light" }) {
   const wordmarkClass = size === "lg" ? "text-2xl" : "text-xl";
@@ -337,12 +338,15 @@ function Landing() {
               </div>
 
               <div
-                className="rounded-lg overflow-hidden mb-4 h-[220px] flex items-center justify-center"
+                className="rounded-lg overflow-hidden mb-4 h-[220px]"
                 style={{ backgroundColor: COLORS.warm }}
               >
-                <span className="font-medium" style={{ color: COLORS.muted }}>
-                  📸 Tárgyaló fotó helye
-                </span>
+                <img
+                  src={TARGYALO_IMG}
+                  alt="Works. iroda tárgyaló — világos, modern enteriőr"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </div>
               <p className="font-medium" style={{ color: COLORS.muted }}>
                 Works. iroda — 1118 Budapest, Himfy utca 1.
