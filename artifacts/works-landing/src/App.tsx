@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const COLORS = {
   coral: "#EE3956",
@@ -486,56 +486,8 @@ function Landing() {
           <p className="text-lg mb-8" style={{ color: COLORS.muted }}>
             Add meg az adataidat, és értesítünk, amikor indul.
           </p>
-          <form
-            className="grid grid-cols-1 sm:grid-cols-6 gap-3 max-w-3xl mx-auto text-left"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <CtaInput
-              className="sm:col-span-3"
-              type="text"
-              name="name"
-              placeholder="Teljes név"
-              autoComplete="name"
-              aria-label="Teljes név"
-              required
-            />
-            <CtaInput
-              className="sm:col-span-3"
-              type="text"
-              name="company"
-              placeholder="Cég neve"
-              autoComplete="organization"
-              aria-label="Cég neve"
-              required
-            />
-            <CtaInput
-              className="sm:col-span-3"
-              type="email"
-              name="email"
-              placeholder="email@cegnev.hu"
-              autoComplete="email"
-              aria-label="Email cím"
-              required
-            />
-            <CtaInput
-              className="sm:col-span-3"
-              type="number"
-              name="attendees"
-              placeholder="Érdeklődők száma (pl. 3)"
-              aria-label="Érdeklődők száma"
-              min={1}
-              required
-            />
-            <CtaTextarea
-              className="sm:col-span-6"
-              name="message"
-              placeholder="Üzenet (opcionális) — kérdés, kontextus, bármi amit jó ha tudunk…"
-              aria-label="Üzenet"
-            />
-            <PillButton type="submit" className="w-full mt-1 sm:col-span-6">
-              Érdekel
-            </PillButton>
-          </form>
+          <LeadForm />
+
         </div>
       </section>
 
@@ -584,6 +536,181 @@ function Landing() {
         </div>
       </footer>
     </div>
+  );
+}
+
+type FormState = "idle" | "submitting" | "success" | "error";
+
+const LEADS_ENDPOINT = `${import.meta.env.BASE_URL}api/leads`;
+
+function LeadForm() {
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [attendees, setAttendees] = useState("");
+  const [message, setMessage] = useState("");
+  const [state, setState] = useState<FormState>("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  function reset() {
+    setName("");
+    setCompany("");
+    setEmail("");
+    setAttendees("");
+    setMessage("");
+    setState("idle");
+    setErrorMsg(null);
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (state === "submitting") return;
+    setState("submitting");
+    setErrorMsg(null);
+    try {
+      const res = await fetch(LEADS_ENDPOINT, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          company: company.trim(),
+          email: email.trim(),
+          attendees: Number(attendees),
+          message: message.trim() || undefined,
+        }),
+      });
+      if (res.status === 201) {
+        setState("success");
+        return;
+      }
+      if (res.status === 429) {
+        setState("error");
+        setErrorMsg(
+          "Túl gyakori próbálkozás — kérlek várj pár másodpercet és próbáld újra.",
+        );
+        return;
+      }
+      const data: unknown = await res.json().catch(() => ({}));
+      const msg =
+        typeof data === "object" && data && "error" in data && typeof (data as { error?: unknown }).error === "string"
+          ? (data as { error: string }).error
+          : "Nem sikerült elküldeni — próbáld újra, vagy írj a hello@worksdot.hu címre.";
+      setState("error");
+      setErrorMsg(msg);
+    } catch {
+      setState("error");
+      setErrorMsg(
+        "Nem sikerült elküldeni — próbáld újra, vagy írj a hello@worksdot.hu címre.",
+      );
+    }
+  }
+
+  if (state === "success") {
+    return (
+      <div
+        className="max-w-3xl mx-auto text-left rounded-2xl p-8"
+        style={{
+          backgroundColor: "#FFFFFF",
+          border: `1px solid ${COLORS.hairline}`,
+        }}
+      >
+        <h3 className="text-xl font-bold mb-2" style={{ color: COLORS.dark }}>
+          Köszönjük a jelentkezést!
+        </h3>
+        <p className="mb-6" style={{ color: COLORS.muted }}>
+          Rögzítettük az érdeklődésedet. Jelentkezünk, amint indul a következő
+          csoport.
+        </p>
+        <PillButton type="button" onClick={reset}>
+          Új jelentkezés
+        </PillButton>
+      </div>
+    );
+  }
+
+  const submitting = state === "submitting";
+
+  return (
+    <form
+      className="grid grid-cols-1 sm:grid-cols-6 gap-3 max-w-3xl mx-auto text-left"
+      onSubmit={handleSubmit}
+      noValidate
+    >
+      <CtaInput
+        className="sm:col-span-3"
+        type="text"
+        name="name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Teljes név"
+        autoComplete="name"
+        aria-label="Teljes név"
+        required
+        disabled={submitting}
+      />
+      <CtaInput
+        className="sm:col-span-3"
+        type="text"
+        name="company"
+        value={company}
+        onChange={(e) => setCompany(e.target.value)}
+        placeholder="Cég neve"
+        autoComplete="organization"
+        aria-label="Cég neve"
+        required
+        disabled={submitting}
+      />
+      <CtaInput
+        className="sm:col-span-3"
+        type="email"
+        name="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="email@cegnev.hu"
+        autoComplete="email"
+        aria-label="Email cím"
+        required
+        disabled={submitting}
+      />
+      <CtaInput
+        className="sm:col-span-3"
+        type="number"
+        name="attendees"
+        value={attendees}
+        onChange={(e) => setAttendees(e.target.value)}
+        placeholder="Érdeklődők száma (pl. 3)"
+        aria-label="Érdeklődők száma"
+        min={1}
+        required
+        disabled={submitting}
+      />
+      <CtaTextarea
+        className="sm:col-span-6"
+        name="message"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Üzenet (opcionális) — kérdés, kontextus, bármi amit jó ha tudunk…"
+        aria-label="Üzenet"
+        disabled={submitting}
+      />
+      <PillButton
+        type="submit"
+        className="w-full mt-1 sm:col-span-6"
+        disabled={submitting}
+        style={submitting ? { opacity: 0.7, cursor: "wait" } : undefined}
+      >
+        {submitting ? "Küldés…" : "Érdekel"}
+      </PillButton>
+      {state === "error" && errorMsg && (
+        <p
+          className="sm:col-span-6 text-sm mt-1"
+          role="alert"
+          style={{ color: COLORS.coral }}
+        >
+          {errorMsg}
+        </p>
+      )}
+    </form>
   );
 }
 
