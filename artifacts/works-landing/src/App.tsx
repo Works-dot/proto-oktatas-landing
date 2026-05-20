@@ -10,7 +10,7 @@ const COLORS = {
   hairline: "#E0DBD7",
 };
 
-const PROTO_IMG = `${import.meta.env.BASE_URL}images/proto_mockup.png`;
+const PROTO_IMG = `${import.meta.env.BASE_URL}images/hero-mockup.png`;
 const OFFICE_IMG = `${import.meta.env.BASE_URL}images/works-office.jpg`;
 const LOGO_IMG = `${import.meta.env.BASE_URL}images/works-logo.png`;
 
@@ -232,7 +232,7 @@ function Landing() {
             <div className="flex justify-center md:justify-end">
               <img
                 src={PROTO_IMG}
-                alt="Prototípus illusztráció"
+                alt="Mobil app prototípus illusztráció"
                 className="w-full max-w-[540px] h-auto"
               />
             </div>
