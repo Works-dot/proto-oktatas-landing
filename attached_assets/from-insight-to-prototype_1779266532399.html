@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insight-tól prototípusig — Works.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FFFFFF;
+  --bg2:#F5F4F1;
+  --bg-dark:#1A1A1A;
+  --text:#1A1A1A;
+  --text2:#5C5C5C;
+  --text3:#9A9A9A;
+  --text-inv:#FFFFFF;
+  --accent:#1A1A1A;
+  --accent-hover:#333;
+  --border:#E0DFDC;
+  --radius:8px;
+  --font:'DM Sans',system-ui,-apple-system,sans-serif;
+}
+body{font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 28px}
+
+/* Nav */
+.nav{padding:24px 0;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-0.5px;color:var(--text);text-decoration:none}
+.nav-link{font-size:14px;color:var(--text2);text-decoration:none}
+.nav-link:hover{color:var(--text)}
+
+/* Hero */
+section{padding:56px 0}
+.hero{padding:72px 0 56px;text-align:center}
+.hero-badge{display:inline-block;background:var(--bg2);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--text2);margin-bottom:24px;letter-spacing:0.02em}
+.hero h1{font-size:40px;font-weight:700;letter-spacing:-1px;line-height:1.15;margin-bottom:16px}
+.hero .pain{font-size:18px;color:var(--text2);max-width:520px;margin:0 auto 8px}
+.hero .promise{font-size:18px;color:var(--text);max-width:560px;margin:0 auto 36px;font-weight:500}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--text-inv);border:none;padding:14px 32px;border-radius:var(--radius);font-size:15px;font-weight:500;cursor:pointer;text-decoration:none;font-family:var(--font);transition:background 0.2s}
+.btn:hover{background:var(--accent-hover)}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--border);margin:0}
+
+/* Section headers */
+h2{font-size:26px;font-weight:600;letter-spacing:-0.5px}
+.section-intro{font-size:15px;color:var(--text2);margin-top:6px;max-width:480px}
+
+/* Audience */
+.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.audience-card{background:var(--bg2);border-radius:var(--radius);padding:24px 20px}
+.audience-card .role{font-size:15px;font-weight:600;margin-bottom:8px}
+.audience-card .desc{font-size:14px;color:var(--text2);line-height:1.6}
+
+/* Steps */
+.steps{margin-top:28px}
+.step{display:flex;gap:20px;padding:28px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{font-size:36px;font-weight:700;color:var(--text3);min-width:40px;line-height:1;letter-spacing:-1px}
+.step-title{font-size:17px;font-weight:600;margin-bottom:4px}
+.step-desc{font-size:14px;color:var(--text2);line-height:1.7}
+.step-details{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.step-detail{font-size:14px;color:var(--text2);line-height:1.7;padding-left:16px;border-left:2px solid var(--border)}
+
+/* Diff */
+.diff-list{margin-top:24px;display:flex;flex-direction:column;gap:16px}
+.diff-item{display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.6}
+.diff-arrow{color:var(--text3);font-weight:600;font-size:20px;margin-top:1px}
+
+/* Details */
+.detail-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.detail-tag{background:var(--bg2);border-radius:var(--radius);padding:10px 18px;font-size:14px;color:var(--text2)}
+.venue{margin-top:20px}
+.venue-photo{background:var(--bg2);border-radius:var(--radius);height:220px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:14px;overflow:hidden}
+.venue-address{margin-top:10px;font-size:14px;color:var(--text2)}
+
+/* Works section */
+.works-block{background:var(--bg2);border-radius:var(--radius);padding:32px}
+.works-block p{font-size:15px;color:var(--text2);line-height:1.7}
+.works-block a{color:var(--text);font-weight:500;text-decoration:underline;text-underline-offset:3px}
+
+/* CTA bottom */
+.cta-bottom{text-align:center;padding:56px 0}
+.cta-bottom h2{margin-bottom:8px}
+.cta-subtitle{font-size:16px;color:var(--text2);margin-bottom:28px}
+.email-row{display:flex;gap:10px;max-width:440px;margin:0 auto}
+.email-input{flex:1;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:15px;font-family:var(--font);outline:none;background:var(--bg)}
+.email-input:focus{border-color:var(--text)}
+.email-input::placeholder{color:var(--text3)}
+
+/* Footer */
+.footer{background:var(--bg-dark);color:var(--text-inv);padding:40px 0;margin-top:0}
+.footer-inner{display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-size:18px;font-weight:700;letter-spacing:-0.5px}
+.footer-links{display:flex;gap:20px}
+.footer-links a{color:rgba(255,255,255,0.6);font-size:13px;text-decoration:none}
+.footer-links a:hover{color:var(--text-inv)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.4);margin-top:16px}
+
+@media(max-width:640px){
+  .hero h1{font-size:30px}
+  .audience-grid{grid-template-columns:1fr}
+  .email-row{flex-direction:column}
+  .step{gap:14px}
+  .footer-inner{flex-direction:column;gap:16px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="https://worksdot.hu" class="nav-logo">Works.</a>
+    <a href="https://worksdot.hu/contact" class="nav-link">Kapcsolat</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">Új képzés</div>
+    <h1>Insight-tól<br>prototípusig</h1>
+    <p class="pain">Rengeteg igény van — és hetekbe telik, mire a ködös igényeket körbejárjuk.</p>
+    <p class="promise">Tanuld meg, hogyan lesz a zavaros igényből kézzel fogható, tesztelhető prototípus — AI segítségével.</p>
+    <a href="#cta" class="btn">Érdekel →</a>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Audience -->
+  <section>
+    <h2>Kinek szól?</h2>
+    <div class="audience-grid">
+      <div class="audience-card">
+        <p class="role">Product ownereknek</p>
+        <p class="desc">Akik nem akarnak heteket várni, hogy a fejlesztőcsapat demózzon valamit.</p>
+      </div>
+      <div class="audience-card">
+        <p class="role">Service designereknek</p>
+        <p class="desc">Akik journey map-eket rajzolnak, de szívesen mutatnának működő felületet is.</p>
+      </div>
+      <div class="audience-card">
+        <p class="role">UX researchereknek</p>
+        <p class="desc">Akik a tesztekhez eddig Figma-mockupokat kértek, és heteket vártak rá.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Program -->
+  <section>
+    <h2>Három alkalom, három szint</h2>
+    <p class="section-intro">Háromhetente, ~4 óra, kis csoport. A saját munkádon keresztül tanulsz.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1.</span>
+        <div>
+          <p class="step-title">A zavaros igénytől az első eredményig</p>
+          <p class="step-desc">Egy életszerűen zavaros üzleti igényből indulsz — és a nap végén böngészőben megnyitható prototípusod lesz. Nem kell hozzá kódolási tapasztalat.</p>
+          <div class="step-details">
+            <p class="step-detail">AI-val szétszeded a homályos igényt: kérdéseket generálsz, feltételezéseket teszel explicitté, eldöntöd, mit érdemes prototipizálni és mit nem.</p>
+            <p class="step-detail">Barnamezős kiindulás: egy fiktív, de realisztikus meglévő rendszerhez érkezik az igény — pont úgy, ahogy a munkahelyeden is működik.</p>
+            <p class="step-detail">Chat-alapú AI-val (Claude, ChatGPT) készítesz egy egyszerű HTML prototípust — közben tanulod a prompt-iteráció logikáját és a szintetikus tesztadat-generálást. Kitérünk adatkezelési tippekre is, hogy bátran kísérletezhess, és az IT biztonsági csapat se akadjon fenn rajta.</p>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">2.</span>
+        <div>
+          <p class="step-title">Komolyabb prototípus, valódi logikával</p>
+          <p class="step-desc">Többoldalas, interaktív, a saját design rendszeredhez igazítható. Nem játék — használható.</p>
+          <div class="step-details">
+            <p class="step-detail">Döntési keretrendszer: mikor elég a pehelysúlyú módszer, és mikor kell komolyabb eszköz? Mennyi időd van, kinek mutatod, mi a tét.</p>
+            <p class="step-detail">Belépés a Claude Code / Replit világába — ugyanazt az igényt megoldjuk komolyabb eszközzel, és meglátod, miben lesz jobb az eredmény.</p>
+            <p class="step-detail">Összetettebb prototípus építése: több képernyő, valódi logika, szűrés, állapotváltozás, adatkapcsolatok.</p>
+            <p class="step-detail">Haladó kihívás: a saját céged design rendszerének alapjait (színek, tipográfia, gomb-stílusok) betöltöd, hogy a protó vizuálisan is illeszkedjen.</p>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">3.</span>
+        <div>
+          <p class="step-title">Meggyőzés és továbblépés</p>
+          <p class="step-desc">A prototípus önmagában nem ér semmit — meg kell tudnod mutatni és el kell tudnod adni.</p>
+          <div class="step-details">
+            <p class="step-detail">Tesztelés felhasználókkal: hogyan keretezed a tesztet, mik a tipikus csapdák, hogyan dokumentálod az eredményt. A résztvevők egymás prototípusait tesztelik párokban.</p>
+            <p class="step-detail">Pitch döntéshozóknak: hogyan mutatod be a protót úgy, hogy ne a technológiáról beszélj, hanem az üzleti kérdésről, amire választ ad.</p>
+            <p class="step-detail">Hogyan dokumentálod a prototípust: mit adj át, hogyan tartsd karban, és mikor érdemes elengedni.</p>
+            <p class="step-detail">Továbblépési térkép: mikor dobd el, mikor iterálj, mikor adj át fejlesztőnek — és mi a konkrét következő lépés.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Differentiator -->
+  <section>
+    <h2>Ez nem AI-tréning</h2>
+    <div class="diff-list">
+      <div class="diff-item">
+        <span class="diff-arrow">→</span>
+        <span>Nem tool-tutorialt tartunk — a saját munkádon keresztül tanulsz.</span>
+      </div>
+      <div class="diff-item">
+        <span class="diff-arrow">→</span>
+        <span>A végén nem egy certificate-ed lesz, hanem egy prototípus, amit megmutathatsz.</span>
+      </div>
+      <div class="diff-item">
+        <span class="diff-arrow">→</span>
+        <span>Nem kell kódolni tudnod.</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Details + Venue -->
+  <section>
+    <h2>Gyakorlati infók</h2>
+    <div class="detail-tags">
+      <span class="detail-tag">📅 3 alkalom, háromhetente</span>
+      <span class="detail-tag">⏱ Alkalmanként ~4 óra</span>
+      <span class="detail-tag">👥 Max 10 fő</span>
+      <span class="detail-tag">📍 Works. iroda, Budapest</span>
+    </div>
+    <div class="venue">
+      <div class="venue-photo">📸 Tárgyaló fotó helye</div>
+      <p class="venue-address">Works. iroda — 1118 Budapest, Himfy utca 1.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Works -->
+  <section>
+    <div class="works-block">
+      <p>A programot a <strong>Works.</strong> szervezi — egy UX és service design csapat, amely 2016 óta segít nagyvállalati ügyfeleknek ügyfélközpontú digitális szolgáltatásokat tervezni. A programot a Works. senior kollégái tartják.</p>
+      <p style="margin-top:10px"><a href="https://worksdot.hu">worksdot.hu →</a></p>
+    </div>
+  </section>
+
+  <!-- CTA bottom -->
+  <section class="cta-bottom" id="cta">
+    <h2>Indulj a következő csoporttal</h2>
+    <p class="cta-subtitle">Add meg e-mail címed, és értesítünk, amikor indul.</p>
+    <div class="email-row">
+      <input type="email" class="email-input" placeholder="email@cegnev.hu">
+      <button class="btn">Érdekel</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <span class="footer-logo">Works.</span>
+      <div class="footer-links">
+        <a href="https://worksdot.hu">Főoldal</a>
+        <a href="https://www.linkedin.com/company/works.-hungary-kft./">LinkedIn</a>
+        <a href="https://worksdot.hu/contact">Kapcsolat</a>
+      </div>
+    </div>
+    <p class="footer-copy">Works Hungary Kft. © 2025 · <a href="https://worksdot.hu/privacy-statement" style="color:rgba(255,255,255,0.4);text-decoration:none">Adatvédelmi nyilatkozat</a></p>
+  </div>
+</div>
+
+</body>
+</html>
