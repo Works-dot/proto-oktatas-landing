@@ -9,9 +9,10 @@ const COLORS = {
   hairline: "#E0DBD7",
 };
 
-function Logo({ size = "md" }: { size?: "md" | "lg" }) {
+function Logo({ size = "md", variant = "dark" }: { size?: "md" | "lg"; variant?: "dark" | "light" }) {
   const wordmarkClass = size === "lg" ? "text-2xl" : "text-xl";
   const diamondSize = size === "lg" ? 30 : 26;
+  const wordmarkColor = variant === "light" ? "#FFFFFF" : COLORS.dark;
   return (
     <span className="inline-flex items-center gap-2">
       <svg
@@ -30,7 +31,7 @@ function Logo({ size = "md" }: { size?: "md" | "lg" }) {
           fill="none"
         />
       </svg>
-      <span className={`${wordmarkClass} font-bold tracking-tight`} style={{ color: COLORS.dark }}>
+      <span className={`${wordmarkClass} font-bold tracking-tight`} style={{ color: wordmarkColor }}>
         Works<span style={{ color: COLORS.coral }}>.</span>
       </span>
     </span>
@@ -426,27 +427,7 @@ export function Landing() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-8 mb-8"
                style={{ borderBottom: `1px solid #3D2D42` }}>
             <a href="https://worksdot.hu" aria-label="Works.">
-              <span className="inline-flex items-center gap-2">
-                <svg
-                  width={30}
-                  height={30}
-                  viewBox="0 0 32 32"
-                  fill="none"
-                  style={{ transform: "rotate(-6deg)" }}
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M16 3 L29 16 L16 29 L3 16 Z"
-                    stroke={COLORS.coral}
-                    strokeWidth="2.5"
-                    strokeLinejoin="round"
-                    fill="none"
-                  />
-                </svg>
-                <span className="text-2xl font-bold tracking-tight text-white">
-                  Works<span style={{ color: COLORS.coral }}>.</span>
-                </span>
-              </span>
+              <Logo size="lg" variant="light" />
             </a>
             <div className="flex flex-wrap justify-center gap-6">
               {[
