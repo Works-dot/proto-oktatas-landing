@@ -509,7 +509,7 @@ function Landing() {
               required
             />
             <CtaInput
-              className="sm:col-span-2"
+              className="sm:col-span-3"
               type="email"
               name="email"
               placeholder="email@cegnev.hu"
@@ -518,16 +518,7 @@ function Landing() {
               required
             />
             <CtaInput
-              className="sm:col-span-2"
-              type="tel"
-              name="phone"
-              placeholder="+36 30 123 4567"
-              autoComplete="tel"
-              aria-label="Telefonszám"
-              required
-            />
-            <CtaInput
-              className="sm:col-span-2"
+              className="sm:col-span-3"
               type="number"
               name="attendees"
               placeholder="Érdeklődők száma (pl. 3)"
