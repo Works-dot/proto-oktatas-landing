@@ -108,11 +108,11 @@ export function Landing() {
 
       {/* Hero Section — warm bg with slanted bottom */}
       <section
-        className="relative pt-12 pb-32 md:pt-16 md:pb-40"
+        className="relative pt-10 pb-20 md:pt-14 md:pb-24"
         style={{ backgroundColor: COLORS.warm, ...slantBottom }}
       >
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-10 items-center">
             <div className="max-w-xl">
               <span
                 className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full mb-6 uppercase tracking-wider"
@@ -149,10 +149,10 @@ export function Landing() {
       </section>
 
       {/* Kinek szól? — white, flush */}
-      <section className="bg-white py-20 md:py-28 -mt-16 relative">
+      <section className="bg-white py-14 md:py-20 -mt-10 relative">
         <div className="max-w-6xl mx-auto px-6">
           <h2
-            className="text-3xl md:text-4xl font-bold mb-12"
+            className="text-3xl md:text-4xl font-bold mb-10"
             style={{ color: COLORS.dark }}
           >
             Kinek szól?
@@ -193,9 +193,9 @@ export function Landing() {
       </section>
 
       {/* Három alkalom, három szint — white */}
-      <section className="py-20 md:py-28">
+      <section className="py-14 md:py-20">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="max-w-3xl mb-16">
+          <div className="max-w-3xl mb-12">
             <h2
               className="text-3xl md:text-4xl font-bold mb-4"
               style={{ color: COLORS.dark }}
@@ -207,7 +207,7 @@ export function Landing() {
             </p>
           </div>
 
-          <div className="space-y-16">
+          <div className="space-y-12">
             {[
               {
                 n: "1.",
@@ -243,8 +243,8 @@ export function Landing() {
               },
             ].map((step, i, arr) => (
               <React.Fragment key={step.n}>
-                <div className="flex flex-col md:flex-row gap-6 md:gap-12">
-                  <div className="md:w-24 shrink-0">
+                <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+                  <div className="md:w-16 shrink-0">
                     <span
                       className="text-5xl font-bold"
                       style={{ color: COLORS.coral }}
@@ -286,11 +286,11 @@ export function Landing() {
 
       {/* Ez nem AI-tréning — dark aubergine, slanted top */}
       <section
-        className="py-24 md:py-32 text-white relative"
+        className="py-16 md:py-24 text-white relative"
         style={{ backgroundColor: COLORS.dark, ...slantTop }}
       >
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">Ez nem AI-tréning</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-10">Ez nem AI-tréning</h2>
           <ul className="space-y-6 text-lg md:text-xl font-medium">
             {[
               "Nem tool-tutorialt tartunk — a saját munkádon keresztül tanulsz.",
@@ -307,17 +307,17 @@ export function Landing() {
       </section>
 
       {/* Gyakorlati infók & Works. block — white */}
-      <section className="py-20 md:py-28 bg-white">
+      <section className="py-14 md:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16">
+          <div className="grid md:grid-cols-2 gap-12">
             <div>
               <h2
-                className="text-3xl font-bold mb-8"
+                className="text-3xl font-bold mb-6"
                 style={{ color: COLORS.dark }}
               >
                 Gyakorlati infók
               </h2>
-              <div className="flex flex-wrap gap-3 mb-12">
+              <div className="flex flex-wrap gap-3 mb-8">
                 {[
                   "📅 3 alkalom, háromhetente",
                   "⏱ Alkalmanként ~4 óra",
@@ -375,11 +375,11 @@ export function Landing() {
         </div>
       </section>
 
-      {/* Bottom CTA — warm bg */}
+      {/* Bottom CTA — warm bg, slanted bottom into dark footer */}
       <section
         id="cta"
-        className="py-20 md:py-32 text-center px-6"
-        style={{ backgroundColor: COLORS.warm }}
+        className="py-16 md:py-24 text-center px-6 relative"
+        style={{ backgroundColor: COLORS.warm, ...slantBottom }}
       >
         <div className="max-w-2xl mx-auto">
           <h2
@@ -420,7 +420,7 @@ export function Landing() {
 
       {/* Footer */}
       <footer
-        className="py-12 px-6 text-white"
+        className="pt-16 pb-12 px-6 text-white -mt-10 relative"
         style={{ backgroundColor: COLORS.dark }}
       >
         <div className="max-w-6xl mx-auto">
