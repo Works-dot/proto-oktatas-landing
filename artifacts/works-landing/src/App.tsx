@@ -105,6 +105,31 @@ function PillLink(
   );
 }
 
+function CtaInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+  const { className = "", style, onFocus, onBlur, ...rest } = props;
+  return (
+    <input
+      {...rest}
+      className={`w-full px-5 py-3 rounded-full bg-white focus:outline-none transition-shadow ${className}`}
+      style={{
+        border: `1px solid ${COLORS.hairline}`,
+        color: COLORS.dark,
+        ...style,
+      }}
+      onFocus={(e) => {
+        e.currentTarget.style.boxShadow = `0 0 0 3px ${COLORS.coral}33`;
+        e.currentTarget.style.borderColor = COLORS.coral;
+        onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.borderColor = COLORS.hairline;
+        onBlur?.(e);
+      }}
+    />
+  );
+}
+
 function Diamond() {
   return (
     <span
@@ -432,31 +457,37 @@ function Landing() {
             Indulj a következő csoporttal
           </h2>
           <p className="text-lg mb-8" style={{ color: COLORS.muted }}>
-            Add meg e-mail címed, és értesítünk, amikor indul.
+            Add meg az adataidat, és értesítünk, amikor indul.
           </p>
           <form
-            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            className="flex flex-col gap-3 max-w-lg mx-auto text-left"
             onSubmit={(e) => e.preventDefault()}
           >
-            <input
-              type="email"
-              placeholder="email@cegnev.hu"
-              className="flex-1 px-5 py-3 rounded-full bg-white focus:outline-none transition-shadow"
-              style={{
-                border: `1px solid ${COLORS.hairline}`,
-                color: COLORS.dark,
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.boxShadow = `0 0 0 3px ${COLORS.coral}33`;
-                e.currentTarget.style.borderColor = COLORS.coral;
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.boxShadow = "none";
-                e.currentTarget.style.borderColor = COLORS.hairline;
-              }}
+            <CtaInput
+              type="text"
+              name="name"
+              placeholder="Teljes név"
+              autoComplete="name"
+              aria-label="Teljes név"
               required
             />
-            <PillButton type="submit">Érdekel</PillButton>
+            <CtaInput
+              type="text"
+              name="company"
+              placeholder="Cég neve"
+              autoComplete="organization"
+              aria-label="Cég neve"
+              required
+            />
+            <CtaInput
+              type="email"
+              name="email"
+              placeholder="email@cegnev.hu"
+              autoComplete="email"
+              aria-label="Email cím"
+              required
+            />
+            <PillButton type="submit" className="w-full mt-1">Érdekel</PillButton>
           </form>
         </div>
       </section>
