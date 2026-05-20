@@ -487,7 +487,7 @@ function Landing() {
             Add meg az adataidat, és értesítünk, amikor indul.
           </p>
           <form
-            className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-left"
+            className="flex flex-col gap-3 max-w-md mx-auto text-left"
             onSubmit={(e) => e.preventDefault()}
           >
             <CtaInput
@@ -529,15 +529,13 @@ function Landing() {
               aria-label="Érdeklődők száma"
               min={1}
               required
-              className="sm:col-span-1"
             />
             <CtaTextarea
               name="message"
-              placeholder="Kérdés, kontextus, bármi amit jó ha tudunk… (opcionális)"
+              placeholder="Üzenet (opcionális) — kérdés, kontextus, bármi amit jó ha tudunk…"
               aria-label="Üzenet"
-              className="sm:col-span-2"
             />
-            <PillButton type="submit" className="w-full mt-1 sm:col-span-2">
+            <PillButton type="submit" className="w-full mt-1">
               Érdekel
             </PillButton>
           </form>
