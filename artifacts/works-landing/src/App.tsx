@@ -3,6 +3,7 @@ import React from "react";
 const COLORS = {
   coral: "#EE3956",
   coralHover: "#D62E48",
+  coralSoft: "#FCE3E7",
   dark: "#2A1A2E",
   muted: "#5C4F5F",
   warm: "#F0EBE8",
@@ -11,115 +12,151 @@ const COLORS = {
 
 const PROTO_IMG = `${import.meta.env.BASE_URL}images/proto_mockup.png`;
 const TARGYALO_IMG = `${import.meta.env.BASE_URL}images/targyalo.jpg`;
+const LOGO_IMG = `${import.meta.env.BASE_URL}images/works-logo.png`;
 
 function Logo({ size = "md", variant = "dark" }: { size?: "md" | "lg"; variant?: "dark" | "light" }) {
-  const wordmarkClass = size === "lg" ? "text-2xl" : "text-xl";
-  const diamondSize = size === "lg" ? 30 : 26;
-  const wordmarkColor = variant === "light" ? "#FFFFFF" : COLORS.dark;
+  const heightPx = size === "lg" ? 36 : 30;
   return (
-    <span className="inline-flex items-center gap-2">
-      <svg
-        width={diamondSize}
-        height={diamondSize}
-        viewBox="0 0 32 32"
-        fill="none"
-        style={{ transform: "rotate(-6deg)" }}
-        aria-hidden="true"
-      >
-        <path
-          d="M16 3 L29 16 L16 29 L3 16 Z"
-          stroke={COLORS.coral}
-          strokeWidth="2.5"
-          strokeLinejoin="round"
-          fill="none"
-        />
-      </svg>
-      <span className={`${wordmarkClass} font-bold tracking-tight`} style={{ color: wordmarkColor }}>
-        Works<span style={{ color: COLORS.coral }}>.</span>
-      </span>
-    </span>
+    <img
+      src={LOGO_IMG}
+      alt="Works."
+      style={{
+        height: heightPx,
+        width: "auto",
+        display: "block",
+        filter: variant === "light" ? "brightness(0) invert(1)" : undefined,
+      }}
+    />
   );
 }
 
-const pillButton =
-  "inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium text-white transition-colors";
-const pillButtonStyle: React.CSSProperties = { backgroundColor: COLORS.coral };
+const pillBase =
+  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors";
+const pillSizes = {
+  md: "px-7 py-3 text-sm",
+  lg: "px-9 py-4 text-base",
+};
 
-function PillButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const { className = "", style, onMouseEnter, onMouseLeave, ...rest } = props;
+type PillVariant = "primary" | "outline";
+
+function pillStyleFor(variant: PillVariant): React.CSSProperties {
+  if (variant === "outline") {
+    return {
+      backgroundColor: "transparent",
+      color: COLORS.coral,
+      border: `1.5px solid ${COLORS.coral}`,
+    };
+  }
+  return { backgroundColor: COLORS.coral, color: "#FFFFFF" };
+}
+
+function applyPillHover(el: HTMLElement, variant: PillVariant, hovered: boolean) {
+  if (variant === "outline") {
+    el.style.backgroundColor = hovered ? COLORS.coralSoft : "transparent";
+  } else {
+    el.style.backgroundColor = hovered ? COLORS.coralHover : COLORS.coral;
+  }
+}
+
+interface PillExtra {
+  variant?: PillVariant;
+  size?: keyof typeof pillSizes;
+}
+
+function PillButton(
+  props: React.ButtonHTMLAttributes<HTMLButtonElement> & PillExtra,
+) {
+  const { className = "", style, variant = "primary", size = "md", onMouseEnter, onMouseLeave, ...rest } = props;
   return (
     <button
       {...rest}
-      className={`${pillButton} ${className}`}
-      style={{ ...pillButtonStyle, ...style }}
+      className={`${pillBase} ${pillSizes[size]} ${className}`}
+      style={{ ...pillStyleFor(variant), ...style }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.backgroundColor = COLORS.coralHover;
+        applyPillHover(e.currentTarget, variant, true);
         onMouseEnter?.(e);
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.backgroundColor = COLORS.coral;
+        applyPillHover(e.currentTarget, variant, false);
         onMouseLeave?.(e);
       }}
     />
   );
 }
 
-function PillLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
-  const { className = "", style, onMouseEnter, onMouseLeave, ...rest } = props;
+function PillLink(
+  props: React.AnchorHTMLAttributes<HTMLAnchorElement> & PillExtra,
+) {
+  const { className = "", style, variant = "primary", size = "md", onMouseEnter, onMouseLeave, ...rest } = props;
   return (
     <a
       {...rest}
-      className={`${pillButton} ${className}`}
-      style={{ ...pillButtonStyle, ...style }}
+      className={`${pillBase} ${pillSizes[size]} ${className}`}
+      style={{ ...pillStyleFor(variant), ...style }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLAnchorElement).style.backgroundColor = COLORS.coralHover;
+        applyPillHover(e.currentTarget, variant, true);
         onMouseEnter?.(e);
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLAnchorElement).style.backgroundColor = COLORS.coral;
+        applyPillHover(e.currentTarget, variant, false);
         onMouseLeave?.(e);
+      }}
+    />
+  );
+}
+
+function Diamond() {
+  return (
+    <span
+      aria-hidden="true"
+      className="inline-block shrink-0"
+      style={{
+        width: 10,
+        height: 10,
+        backgroundColor: COLORS.coral,
+        transform: "rotate(45deg)",
+        marginTop: "0.55em",
       }}
     />
   );
 }
 
 function Landing() {
-  const slantBottom: React.CSSProperties = {
-    clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 60px), 0 100%)",
-  };
-  const slantTop: React.CSSProperties = {
-    clipPath: "polygon(0 60px, 100% 0, 100% 100%, 0 100%)",
-  };
-
   return (
     <div
-      className="font-['DM_Sans'] antialiased min-h-screen"
+      className="font-['Mulish'] antialiased min-h-screen"
       style={{ backgroundColor: "#FFFFFF", color: COLORS.dark }}
     >
-      {/* Navigation */}
+      {/* Navigation — sticky */}
       <nav
-        className="relative z-10 px-6 py-6"
-        style={{ backgroundColor: COLORS.warm }}
+        className="sticky top-0 z-50 px-6 py-4 backdrop-blur"
+        style={{
+          backgroundColor: "rgba(255,255,255,0.85)",
+          borderBottom: `1px solid ${COLORS.hairline}`,
+        }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a href="https://worksdot.hu" aria-label="Works.">
             <Logo />
           </a>
-          <PillLink href="https://worksdot.hu/contact">Kapcsolat</PillLink>
+          <PillLink href="https://worksdot.hu/contact" variant="outline">
+            Kapcsolat
+          </PillLink>
         </div>
       </nav>
 
-      {/* Hero Section — warm bg with slanted bottom */}
-      <section
-        className="relative pt-10 pb-20 md:pt-14 md:pb-24"
-        style={{ backgroundColor: COLORS.warm, ...slantBottom }}
-      >
+      {/* Hero Section — white, no slant */}
+      <section className="relative pt-10 pb-16 md:pt-14 md:pb-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-10 md:gap-10 items-center">
             <div className="max-w-xl">
               <span
                 className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full mb-6 uppercase tracking-wider"
-                style={{ backgroundColor: "#FFFFFF", color: COLORS.muted }}
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  color: COLORS.muted,
+                  border: `1px solid ${COLORS.hairline}`,
+                }}
               >
                 Új képzés
               </span>
@@ -138,7 +175,7 @@ function Landing() {
               >
                 Tanuld meg, hogyan lesz a zavaros igényből kézzel fogható, tesztelhető prototípus — AI segítségével.
               </p>
-              <PillLink href="#cta">Érdekel →</PillLink>
+              <PillLink href="#cta" size="lg">Érdekel →</PillLink>
             </div>
             <div className="flex justify-center md:justify-end">
               <img
@@ -151,8 +188,8 @@ function Landing() {
         </div>
       </section>
 
-      {/* Kinek szól? — white, flush */}
-      <section className="bg-white py-14 md:py-20 -mt-10 relative">
+      {/* Kinek szól? — warm bg */}
+      <section className="py-14 md:py-20" style={{ backgroundColor: COLORS.warm }}>
         <div className="max-w-6xl mx-auto px-6">
           <h2
             className="text-3xl md:text-4xl font-bold mb-10"
@@ -177,8 +214,8 @@ function Landing() {
             ].map((card) => (
               <div
                 key={card.t}
-                className="p-8 rounded-lg"
-                style={{ backgroundColor: COLORS.warm }}
+                className="p-8 rounded-lg bg-white"
+                style={{ borderLeft: `6px solid ${COLORS.coral}` }}
               >
                 <h3
                   className="text-lg font-semibold mb-3"
@@ -196,7 +233,7 @@ function Landing() {
       </section>
 
       {/* Három alkalom, három szint — white */}
-      <section className="py-14 md:py-20">
+      <section className="py-14 md:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="max-w-3xl mb-12">
             <h2
@@ -271,7 +308,7 @@ function Landing() {
                     <ul className="space-y-4 text-base md:text-lg" style={{ color: COLORS.muted }}>
                       {step.bullets.map((b, j) => (
                         <li key={j} className="flex gap-4">
-                          <span style={{ color: COLORS.coral }}>—</span>
+                          <Diamond />
                           <span>{b}</span>
                         </li>
                       ))}
@@ -287,10 +324,10 @@ function Landing() {
         </div>
       </section>
 
-      {/* Ez nem AI-tréning — dark aubergine, slanted top */}
+      {/* Ez nem AI-tréning — dark aubergine */}
       <section
-        className="py-16 md:py-24 text-white relative"
-        style={{ backgroundColor: COLORS.dark, ...slantTop }}
+        className="py-16 md:py-24 text-white"
+        style={{ backgroundColor: COLORS.dark }}
       >
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold mb-10">Ez nem AI-tréning</h2>
@@ -381,11 +418,11 @@ function Landing() {
         </div>
       </section>
 
-      {/* Bottom CTA — warm bg, slanted bottom into dark footer */}
+      {/* Bottom CTA — warm bg */}
       <section
         id="cta"
-        className="py-16 md:py-24 text-center px-6 relative"
-        style={{ backgroundColor: COLORS.warm, ...slantBottom }}
+        className="py-16 md:py-24 text-center px-6"
+        style={{ backgroundColor: COLORS.warm }}
       >
         <div className="max-w-2xl mx-auto">
           <h2
@@ -426,7 +463,7 @@ function Landing() {
 
       {/* Footer */}
       <footer
-        className="pt-16 pb-12 px-6 text-white -mt-10 relative"
+        className="pt-16 pb-12 px-6 text-white"
         style={{ backgroundColor: COLORS.dark }}
       >
         <div className="max-w-6xl mx-auto">
