@@ -476,7 +476,7 @@ function Landing() {
         className="py-16 md:py-24 text-center px-6"
         style={{ backgroundColor: COLORS.warm }}
       >
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <h2
             className="text-3xl md:text-4xl font-bold mb-4"
             style={{ color: COLORS.dark }}
@@ -487,10 +487,11 @@ function Landing() {
             Add meg az adataidat, és értesítünk, amikor indul.
           </p>
           <form
-            className="flex flex-col gap-3 max-w-md mx-auto text-left"
+            className="grid grid-cols-1 sm:grid-cols-6 gap-3 max-w-3xl mx-auto text-left"
             onSubmit={(e) => e.preventDefault()}
           >
             <CtaInput
+              className="sm:col-span-3"
               type="text"
               name="name"
               placeholder="Teljes név"
@@ -499,6 +500,7 @@ function Landing() {
               required
             />
             <CtaInput
+              className="sm:col-span-3"
               type="text"
               name="company"
               placeholder="Cég neve"
@@ -507,6 +509,7 @@ function Landing() {
               required
             />
             <CtaInput
+              className="sm:col-span-2"
               type="email"
               name="email"
               placeholder="email@cegnev.hu"
@@ -515,6 +518,7 @@ function Landing() {
               required
             />
             <CtaInput
+              className="sm:col-span-2"
               type="tel"
               name="phone"
               placeholder="+36 30 123 4567"
@@ -523,6 +527,7 @@ function Landing() {
               required
             />
             <CtaInput
+              className="sm:col-span-2"
               type="number"
               name="attendees"
               placeholder="Érdeklődők száma (pl. 3)"
@@ -531,11 +536,12 @@ function Landing() {
               required
             />
             <CtaTextarea
+              className="sm:col-span-6"
               name="message"
               placeholder="Üzenet (opcionális) — kérdés, kontextus, bármi amit jó ha tudunk…"
               aria-label="Üzenet"
             />
-            <PillButton type="submit" className="w-full mt-1">
+            <PillButton type="submit" className="w-full mt-1 sm:col-span-6">
               Érdekel
             </PillButton>
           </form>
