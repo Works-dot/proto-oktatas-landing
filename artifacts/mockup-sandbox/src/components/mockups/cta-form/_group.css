@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&display=swap');
+
+.works-cta-root {
+  --coral: #EE3956;
+  --coral-hover: #D62E48;
+  --coral-soft: #FCE3E7;
+  --dark: #2A1A2E;
+  --muted: #5C4F5F;
+  --warm: #F0EDF1;
+  --hairline: #E0DBD7;
+  font-family: 'Mulish', system-ui, -apple-system, sans-serif;
+  color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+.works-cta-input,
+.works-cta-textarea {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid var(--hairline);
+  color: var(--dark);
+  font-family: inherit;
+  font-size: 15px;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  outline: none;
+}
+.works-cta-input { padding: 12px 18px; border-radius: 14px; }
+.works-cta-textarea { padding: 12px 18px; border-radius: 14px; resize: vertical; min-height: 96px; }
+.works-cta-input:focus,
+.works-cta-textarea:focus {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgba(238, 57, 86, 0.2);
+}
+.works-cta-input::placeholder,
+.works-cta-textarea::placeholder { color: #A89DAC; }
+
+.works-cta-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.works-cta-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 14px;
+}
+
+.works-cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--coral);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+}
+.works-cta-button:hover { background: var(--coral-hover); }
+
+.works-cta-divider {
+  height: 1px;
+  background: var(--hairline);
+  margin: 20px 0;
+}
