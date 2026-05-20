@@ -110,7 +110,7 @@ function CtaInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...rest}
-      className={`w-full px-5 py-3 rounded-full bg-white focus:outline-none transition-shadow ${className}`}
+      className={`w-full px-5 py-3 rounded-lg bg-white focus:outline-none transition-shadow ${className}`}
       style={{
         border: `1px solid ${COLORS.hairline}`,
         color: COLORS.dark,
@@ -136,7 +136,7 @@ function CtaTextarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
     <textarea
       {...rest}
       rows={rows}
-      className={`w-full px-5 py-3 rounded-2xl bg-white focus:outline-none transition-shadow resize-y ${className}`}
+      className={`w-full px-5 py-3 rounded-lg bg-white focus:outline-none transition-shadow resize-y ${className}`}
       style={{
         border: `1px solid ${COLORS.hairline}`,
         color: COLORS.dark,
