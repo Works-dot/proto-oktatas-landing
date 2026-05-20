@@ -11,7 +11,7 @@ const COLORS = {
 };
 
 const PROTO_IMG = `${import.meta.env.BASE_URL}images/proto_mockup.png`;
-const TARGYALO_IMG = `${import.meta.env.BASE_URL}images/targyalo.jpg`;
+const OFFICE_IMG = `${import.meta.env.BASE_URL}images/works-office.jpg`;
 const LOGO_IMG = `${import.meta.env.BASE_URL}images/works-logo.png`;
 
 function Logo({ size = "md", variant = "dark" }: { size?: "md" | "lg"; variant?: "dark" | "light" }) {
@@ -375,12 +375,12 @@ function Landing() {
               </div>
 
               <div
-                className="rounded-lg overflow-hidden mb-4 h-[220px]"
+                className="rounded-lg overflow-hidden mb-4 h-[300px]"
                 style={{ backgroundColor: COLORS.warm }}
               >
                 <img
-                  src={TARGYALO_IMG}
-                  alt="Works. iroda tárgyaló — világos, modern enteriőr"
+                  src={OFFICE_IMG}
+                  alt="Works. iroda — kollégák laptopokkal a tárgyalóasztalnál"
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />
