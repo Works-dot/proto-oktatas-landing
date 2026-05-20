@@ -113,7 +113,7 @@ function Diamond() {
       style={{
         width: 10,
         height: 10,
-        backgroundColor: COLORS.coral,
+        backgroundColor: COLORS.warm,
         transform: "rotate(45deg)",
         marginTop: "0.55em",
       }}
