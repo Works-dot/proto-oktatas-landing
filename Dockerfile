@@ -1,7 +1,7 @@
 FROM node:22-alpine AS base
 RUN corepack enable
 WORKDIR /app
-ENV CI=true
+ENV SKIP_PM_CHECK=1
 
 FROM base AS build
 COPY . .
