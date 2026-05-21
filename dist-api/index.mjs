@@ -56775,6 +56775,7 @@ var HTML = `<!doctype html>
             <th class="num">F\u0151</th>
             <th>\xDCzenet</th>
             <th>IP</th>
+            <th>User agent</th>
           </tr>
         </thead>
         <tbody id="rows"></tbody>
@@ -56848,11 +56849,12 @@ var HTML = `<!doctype html>
           + '<td class="num">' + escapeHtml(L.attendees) + '</td>'
           + '<td class="msg">' + escapeHtml(L.message || '') + '</td>'
           + '<td class="mono">' + escapeHtml(L.sourceIp || '') + '</td>'
+          + '<td class="mono" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + escapeHtml(L.userAgent || '') + '">' + escapeHtml(L.userAgent || '') + '</td>'
           + '</tr>';
       }
       rowsEl.innerHTML = html;
     } catch (e) {
-      rowsEl.innerHTML = '<tr><td colspan="7" style="color:var(--coral);padding:20px">Nem siker\xFClt lek\xE9rdezni a leadeket. Friss\xEDtsd az oldalt.</td></tr>';
+      rowsEl.innerHTML = '<tr><td colspan="8" style="color:var(--coral);padding:20px">Nem siker\xFClt lek\xE9rdezni a leadeket. Friss\xEDtsd az oldalt.</td></tr>';
     }
   }
 
