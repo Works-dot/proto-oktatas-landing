@@ -164,7 +164,7 @@ var require_common = __commonJS({
     function setup(env) {
       createDebug.debug = createDebug;
       createDebug.default = createDebug;
-      createDebug.coerce = coerce;
+      createDebug.coerce = coerce2;
       createDebug.disable = disable;
       createDebug.enable = enable;
       createDebug.enabled = enabled;
@@ -319,7 +319,7 @@ var require_common = __commonJS({
         }
         return false;
       }
-      function coerce(val) {
+      function coerce2(val) {
         if (val instanceof Error) {
           return val.stack || val.message;
         }
@@ -20498,27 +20498,27 @@ var require_router = __commonJS({
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
-    module.exports = Router4;
+    module.exports = Router6;
     module.exports.Route = Route;
-    function Router4(options) {
-      if (!(this instanceof Router4)) {
-        return new Router4(options);
+    function Router6(options) {
+      if (!(this instanceof Router6)) {
+        return new Router6(options);
       }
       const opts = options || {};
-      function router4(req, res, next) {
-        router4.handle(req, res, next);
+      function router6(req, res, next) {
+        router6.handle(req, res, next);
       }
-      Object.setPrototypeOf(router4, this);
-      router4.caseSensitive = opts.caseSensitive;
-      router4.mergeParams = opts.mergeParams;
-      router4.params = {};
-      router4.strict = opts.strict;
-      router4.stack = [];
-      return router4;
+      Object.setPrototypeOf(router6, this);
+      router6.caseSensitive = opts.caseSensitive;
+      router6.mergeParams = opts.mergeParams;
+      router6.params = {};
+      router6.strict = opts.strict;
+      router6.stack = [];
+      return router6;
     }
-    Router4.prototype = function() {
+    Router6.prototype = function() {
     };
-    Router4.prototype.param = function param(name, fn) {
+    Router6.prototype.param = function param(name, fn) {
       if (!name) {
         throw new TypeError("argument name is required");
       }
@@ -20538,7 +20538,7 @@ var require_router = __commonJS({
       params.push(fn);
       return this;
     };
-    Router4.prototype.handle = function handle(req, res, callback) {
+    Router6.prototype.handle = function handle(req, res, callback) {
       if (!callback) {
         throw new TypeError("argument callback is required");
       }
@@ -20665,7 +20665,7 @@ var require_router = __commonJS({
         }
       }
     };
-    Router4.prototype.use = function use(handler) {
+    Router6.prototype.use = function use(handler) {
       let offset = 0;
       let path3 = "/";
       if (typeof handler !== "function") {
@@ -20698,7 +20698,7 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router4.prototype.route = function route(path3) {
+    Router6.prototype.route = function route(path3) {
       const route2 = new Route(path3);
       const layer = new Layer(path3, {
         sensitive: this.caseSensitive,
@@ -20713,7 +20713,7 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router4.prototype[method] = function(path3) {
+      Router6.prototype[method] = function(path3) {
         const route = this.route(path3);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
@@ -20896,13 +20896,13 @@ var require_application = __commonJS({
     var compileTrust = require_utils3().compileTrust;
     var resolve = __require("node:path").resolve;
     var once = require_once();
-    var Router4 = require_router();
+    var Router6 = require_router();
     var slice = Array.prototype.slice;
     var flatten = Array.prototype.flat;
     var app2 = exports = module.exports = {};
     var trustProxyDefaultSymbol = "@@symbol:trust_proxy_default";
     app2.init = function init() {
-      var router4 = null;
+      var router6 = null;
       this.cache = /* @__PURE__ */ Object.create(null);
       this.engines = /* @__PURE__ */ Object.create(null);
       this.settings = /* @__PURE__ */ Object.create(null);
@@ -20911,13 +20911,13 @@ var require_application = __commonJS({
         configurable: true,
         enumerable: true,
         get: function getrouter() {
-          if (router4 === null) {
-            router4 = new Router4({
+          if (router6 === null) {
+            router6 = new Router6({
               caseSensitive: this.enabled("case sensitive routing"),
               strict: this.enabled("strict routing")
             });
           }
-          return router4;
+          return router6;
         }
       });
     };
@@ -20988,15 +20988,15 @@ var require_application = __commonJS({
       if (fns.length === 0) {
         throw new TypeError("app.use() requires a middleware function");
       }
-      var router4 = this.router;
+      var router6 = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router4.use(path3, fn2);
+          return router6.use(path3, fn2);
         }
         debug(".use app under %s", path3);
         fn2.mountpath = path3;
         fn2.parent = this;
-        router4.use(path3, function mounted_app(req, res, next) {
+        router6.use(path3, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -23569,7 +23569,7 @@ var require_express = __commonJS({
     var EventEmitter = __require("node:events").EventEmitter;
     var mixin = require_merge_descriptors();
     var proto = require_application();
-    var Router4 = require_router();
+    var Router6 = require_router();
     var req = require_request();
     var res = require_response();
     exports = module.exports = createApplication;
@@ -23591,8 +23591,8 @@ var require_express = __commonJS({
     exports.application = proto;
     exports.request = req;
     exports.response = res;
-    exports.Route = Router4.Route;
-    exports.Router = Router4;
+    exports.Route = Router6.Route;
+    exports.Router = Router6;
     exports.json = bodyParser.json;
     exports.raw = bodyParser.raw;
     exports.static = require_serve_static();
@@ -23884,6 +23884,119 @@ var require_lib3 = __commonJS({
       }
       module.exports = middlewareWrapper;
     })();
+  }
+});
+
+// ../../node_modules/.pnpm/cookie-signature@1.0.6/node_modules/cookie-signature/index.js
+var require_cookie_signature2 = __commonJS({
+  "../../node_modules/.pnpm/cookie-signature@1.0.6/node_modules/cookie-signature/index.js"(exports) {
+    var crypto3 = __require("crypto");
+    exports.sign = function(val, secret) {
+      if ("string" != typeof val) throw new TypeError("Cookie value must be provided as a string.");
+      if ("string" != typeof secret) throw new TypeError("Secret string must be provided.");
+      return val + "." + crypto3.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
+    };
+    exports.unsign = function(val, secret) {
+      if ("string" != typeof val) throw new TypeError("Signed cookie string must be provided.");
+      if ("string" != typeof secret) throw new TypeError("Secret string must be provided.");
+      var str = val.slice(0, val.lastIndexOf(".")), mac = exports.sign(str, secret);
+      return sha1(mac) == sha1(val) ? str : false;
+    };
+    function sha1(str) {
+      return crypto3.createHash("sha1").update(str).digest("hex");
+    }
+  }
+});
+
+// ../../node_modules/.pnpm/cookie-parser@1.4.7/node_modules/cookie-parser/index.js
+var require_cookie_parser = __commonJS({
+  "../../node_modules/.pnpm/cookie-parser@1.4.7/node_modules/cookie-parser/index.js"(exports, module) {
+    "use strict";
+    var cookie = require_cookie();
+    var signature = require_cookie_signature2();
+    module.exports = cookieParser2;
+    module.exports.JSONCookie = JSONCookie;
+    module.exports.JSONCookies = JSONCookies;
+    module.exports.signedCookie = signedCookie;
+    module.exports.signedCookies = signedCookies;
+    function cookieParser2(secret, options) {
+      var secrets = !secret || Array.isArray(secret) ? secret || [] : [secret];
+      return function cookieParser3(req, res, next) {
+        if (req.cookies) {
+          return next();
+        }
+        var cookies = req.headers.cookie;
+        req.secret = secrets[0];
+        req.cookies = /* @__PURE__ */ Object.create(null);
+        req.signedCookies = /* @__PURE__ */ Object.create(null);
+        if (!cookies) {
+          return next();
+        }
+        req.cookies = cookie.parse(cookies, options);
+        if (secrets.length !== 0) {
+          req.signedCookies = signedCookies(req.cookies, secrets);
+          req.signedCookies = JSONCookies(req.signedCookies);
+        }
+        req.cookies = JSONCookies(req.cookies);
+        next();
+      };
+    }
+    function JSONCookie(str) {
+      if (typeof str !== "string" || str.substr(0, 2) !== "j:") {
+        return void 0;
+      }
+      try {
+        return JSON.parse(str.slice(2));
+      } catch (err) {
+        return void 0;
+      }
+    }
+    function JSONCookies(obj) {
+      var cookies = Object.keys(obj);
+      var key;
+      var val;
+      for (var i = 0; i < cookies.length; i++) {
+        key = cookies[i];
+        val = JSONCookie(obj[key]);
+        if (val) {
+          obj[key] = val;
+        }
+      }
+      return obj;
+    }
+    function signedCookie(str, secret) {
+      if (typeof str !== "string") {
+        return void 0;
+      }
+      if (str.substr(0, 2) !== "s:") {
+        return str;
+      }
+      var secrets = !secret || Array.isArray(secret) ? secret || [] : [secret];
+      for (var i = 0; i < secrets.length; i++) {
+        var val = signature.unsign(str.slice(2), secrets[i]);
+        if (val !== false) {
+          return val;
+        }
+      }
+      return false;
+    }
+    function signedCookies(obj, secret) {
+      var cookies = Object.keys(obj);
+      var dec;
+      var key;
+      var ret = /* @__PURE__ */ Object.create(null);
+      var val;
+      for (var i = 0; i < cookies.length; i++) {
+        key = cookies[i];
+        val = obj[key];
+        dec = signedCookie(val, secret);
+        if (val !== dec) {
+          ret[key] = dec;
+          delete obj[key];
+        }
+      }
+      return ret;
+    }
   }
 });
 
@@ -29651,7 +29764,7 @@ var require_utils_webcrypto = __commonJS({
     var nodeCrypto = __require("crypto");
     module.exports = {
       postgresMd5PasswordHash,
-      randomBytes,
+      randomBytes: randomBytes2,
       deriveKey,
       sha256,
       hashByName,
@@ -29661,7 +29774,7 @@ var require_utils_webcrypto = __commonJS({
     var webCrypto = nodeCrypto.webcrypto || globalThis.crypto;
     var subtleCrypto = webCrypto.subtle;
     var textEncoder = new TextEncoder();
-    function randomBytes(length) {
+    function randomBytes2(length) {
       return webCrypto.getRandomValues(Buffer.alloc(length));
     }
     async function md5(string4) {
@@ -33597,17 +33710,130 @@ async function migrate(db2, config2) {
 }
 
 // src/app.ts
-var import_express4 = __toESM(require_express2(), 1);
+var import_express6 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
+var import_cookie_parser = __toESM(require_cookie_parser(), 1);
 var import_pino_http = __toESM(require_logger(), 1);
 import path from "node:path";
 import fs2 from "node:fs";
 
 // src/routes/index.ts
-var import_express3 = __toESM(require_express2(), 1);
+var import_express4 = __toESM(require_express2(), 1);
 
 // src/routes/health.ts
 var import_express = __toESM(require_express2(), 1);
+
+// ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/external.js
+var external_exports = {};
+__export(external_exports, {
+  BRAND: () => BRAND,
+  DIRTY: () => DIRTY,
+  EMPTY_PATH: () => EMPTY_PATH,
+  INVALID: () => INVALID,
+  NEVER: () => NEVER,
+  OK: () => OK,
+  ParseStatus: () => ParseStatus,
+  Schema: () => ZodType,
+  ZodAny: () => ZodAny,
+  ZodArray: () => ZodArray,
+  ZodBigInt: () => ZodBigInt,
+  ZodBoolean: () => ZodBoolean,
+  ZodBranded: () => ZodBranded,
+  ZodCatch: () => ZodCatch,
+  ZodDate: () => ZodDate,
+  ZodDefault: () => ZodDefault,
+  ZodDiscriminatedUnion: () => ZodDiscriminatedUnion,
+  ZodEffects: () => ZodEffects,
+  ZodEnum: () => ZodEnum,
+  ZodError: () => ZodError,
+  ZodFirstPartyTypeKind: () => ZodFirstPartyTypeKind,
+  ZodFunction: () => ZodFunction,
+  ZodIntersection: () => ZodIntersection,
+  ZodIssueCode: () => ZodIssueCode,
+  ZodLazy: () => ZodLazy,
+  ZodLiteral: () => ZodLiteral,
+  ZodMap: () => ZodMap,
+  ZodNaN: () => ZodNaN,
+  ZodNativeEnum: () => ZodNativeEnum,
+  ZodNever: () => ZodNever,
+  ZodNull: () => ZodNull,
+  ZodNullable: () => ZodNullable,
+  ZodNumber: () => ZodNumber,
+  ZodObject: () => ZodObject,
+  ZodOptional: () => ZodOptional,
+  ZodParsedType: () => ZodParsedType,
+  ZodPipeline: () => ZodPipeline,
+  ZodPromise: () => ZodPromise,
+  ZodReadonly: () => ZodReadonly,
+  ZodRecord: () => ZodRecord,
+  ZodSchema: () => ZodType,
+  ZodSet: () => ZodSet,
+  ZodString: () => ZodString,
+  ZodSymbol: () => ZodSymbol,
+  ZodTransformer: () => ZodEffects,
+  ZodTuple: () => ZodTuple,
+  ZodType: () => ZodType,
+  ZodUndefined: () => ZodUndefined,
+  ZodUnion: () => ZodUnion,
+  ZodUnknown: () => ZodUnknown,
+  ZodVoid: () => ZodVoid,
+  addIssueToContext: () => addIssueToContext,
+  any: () => anyType,
+  array: () => arrayType,
+  bigint: () => bigIntType,
+  boolean: () => booleanType,
+  coerce: () => coerce,
+  custom: () => custom,
+  date: () => dateType,
+  datetimeRegex: () => datetimeRegex,
+  defaultErrorMap: () => en_default,
+  discriminatedUnion: () => discriminatedUnionType,
+  effect: () => effectsType,
+  enum: () => enumType,
+  function: () => functionType,
+  getErrorMap: () => getErrorMap,
+  getParsedType: () => getParsedType,
+  instanceof: () => instanceOfType,
+  intersection: () => intersectionType,
+  isAborted: () => isAborted,
+  isAsync: () => isAsync,
+  isDirty: () => isDirty,
+  isValid: () => isValid,
+  late: () => late,
+  lazy: () => lazyType,
+  literal: () => literalType,
+  makeIssue: () => makeIssue,
+  map: () => mapType,
+  nan: () => nanType,
+  nativeEnum: () => nativeEnumType,
+  never: () => neverType,
+  null: () => nullType,
+  nullable: () => nullableType,
+  number: () => numberType,
+  object: () => objectType,
+  objectUtil: () => objectUtil,
+  oboolean: () => oboolean,
+  onumber: () => onumber,
+  optional: () => optionalType,
+  ostring: () => ostring,
+  pipeline: () => pipelineType,
+  preprocess: () => preprocessType,
+  promise: () => promiseType,
+  quotelessJson: () => quotelessJson,
+  record: () => recordType,
+  set: () => setType,
+  setErrorMap: () => setErrorMap,
+  strictObject: () => strictObjectType,
+  string: () => stringType,
+  symbol: () => symbolType,
+  transformer: () => effectsType,
+  tuple: () => tupleType,
+  undefined: () => undefinedType,
+  union: () => unionType,
+  unknown: () => unknownType,
+  util: () => util,
+  void: () => voidType
+});
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/helpers/util.js
 var util;
@@ -33762,6 +33988,10 @@ var ZodIssueCode = util.arrayToEnum([
   "not_multiple_of",
   "not_finite"
 ]);
+var quotelessJson = (obj) => {
+  const json3 = JSON.stringify(obj, null, 2);
+  return json3.replace(/"([^"]+)":/g, "$1:");
+};
 var ZodError = class _ZodError extends Error {
   get errors() {
     return this.issues;
@@ -33962,6 +34192,9 @@ var en_default = errorMap;
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v3/errors.js
 var overrideErrorMap = en_default;
+function setErrorMap(map2) {
+  overrideErrorMap = map2;
+}
 function getErrorMap() {
   return overrideErrorMap;
 }
@@ -33992,6 +34225,7 @@ var makeIssue = (params) => {
     message: errorMessage
   };
 };
+var EMPTY_PATH = [];
 function addIssueToContext(ctx, issueData) {
   const overrideMap = getErrorMap();
   const issue2 = makeIssue({
@@ -37317,6 +37551,7 @@ ZodNaN.create = (params) => {
     ...processCreateParams(params)
   });
 };
+var BRAND = /* @__PURE__ */ Symbol("zod_brand");
 var ZodBranded = class extends ZodType {
   _parse(input) {
     const { ctx } = this._processInputParams(input);
@@ -37408,6 +37643,33 @@ ZodReadonly.create = (type, params) => {
     ...processCreateParams(params)
   });
 };
+function cleanParams(params, data) {
+  const p = typeof params === "function" ? params(data) : typeof params === "string" ? { message: params } : params;
+  const p2 = typeof p === "string" ? { message: p } : p;
+  return p2;
+}
+function custom(check2, _params = {}, fatal) {
+  if (check2)
+    return ZodAny.create().superRefine((data, ctx) => {
+      const r = check2(data);
+      if (r instanceof Promise) {
+        return r.then((r2) => {
+          if (!r2) {
+            const params = cleanParams(_params, data);
+            const _fatal = params.fatal ?? fatal ?? true;
+            ctx.addIssue({ code: "custom", ...params, fatal: _fatal });
+          }
+        });
+      }
+      if (!r) {
+        const params = cleanParams(_params, data);
+        const _fatal = params.fatal ?? fatal ?? true;
+        ctx.addIssue({ code: "custom", ...params, fatal: _fatal });
+      }
+      return;
+    });
+  return ZodAny.create();
+}
 var late = {
   object: ZodObject.lazycreate
 };
@@ -37450,6 +37712,9 @@ var ZodFirstPartyTypeKind;
   ZodFirstPartyTypeKind2["ZodPipeline"] = "ZodPipeline";
   ZodFirstPartyTypeKind2["ZodReadonly"] = "ZodReadonly";
 })(ZodFirstPartyTypeKind || (ZodFirstPartyTypeKind = {}));
+var instanceOfType = (cls, params = {
+  message: `Input not instance of ${cls.name}`
+}) => custom((data) => data instanceof cls, params);
 var stringType = ZodString.create;
 var numberType = ZodNumber.create;
 var nanType = ZodNaN.create;
@@ -37484,6 +37749,20 @@ var optionalType = ZodOptional.create;
 var nullableType = ZodNullable.create;
 var preprocessType = ZodEffects.createWithPreprocess;
 var pipelineType = ZodPipeline.create;
+var ostring = () => stringType().optional();
+var onumber = () => numberType().optional();
+var oboolean = () => booleanType().optional();
+var coerce = {
+  string: ((arg) => ZodString.create({ ...arg, coerce: true })),
+  number: ((arg) => ZodNumber.create({ ...arg, coerce: true })),
+  boolean: ((arg) => ZodBoolean.create({
+    ...arg,
+    coerce: true
+  })),
+  bigint: ((arg) => ZodBigInt.create({ ...arg, coerce: true })),
+  date: ((arg) => ZodDate.create({ ...arg, coerce: true }))
+};
+var NEVER = INVALID;
 
 // ../../lib/api-zod/src/generated/api.ts
 var HealthCheckResponse = objectType({
@@ -44473,16 +44752,17 @@ function drizzle(...params) {
 var schema_exports = {};
 __export(schema_exports, {
   insertLeadSchema: () => insertLeadSchema,
-  leadsTable: () => leadsTable
+  leadsTable: () => leadsTable,
+  submitLeadSchema: () => submitLeadSchema
 });
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v4/classic/external.js
-var external_exports = {};
-__export(external_exports, {
+var external_exports2 = {};
+__export(external_exports2, {
   $brand: () => $brand,
   $input: () => $input,
   $output: () => $output,
-  NEVER: () => NEVER,
+  NEVER: () => NEVER2,
   TimePrecision: () => TimePrecision,
   ZodAny: () => ZodAny2,
   ZodArray: () => ZodArray2,
@@ -44572,7 +44852,7 @@ __export(external_exports, {
   core: () => core_exports2,
   cuid: () => cuid3,
   cuid2: () => cuid22,
-  custom: () => custom,
+  custom: () => custom2,
   date: () => date4,
   discriminatedUnion: () => discriminatedUnion,
   e164: () => e1642,
@@ -44654,7 +44934,7 @@ __export(external_exports, {
   safeParse: () => safeParse2,
   safeParseAsync: () => safeParseAsync2,
   set: () => set,
-  setErrorMap: () => setErrorMap,
+  setErrorMap: () => setErrorMap2,
   size: () => _size,
   startsWith: () => _startsWith,
   strictObject: () => strictObject,
@@ -44792,7 +45072,7 @@ __export(core_exports2, {
   Doc: () => Doc,
   JSONSchema: () => json_schema_exports,
   JSONSchemaGenerator: () => JSONSchemaGenerator,
-  NEVER: () => NEVER,
+  NEVER: () => NEVER2,
   TimePrecision: () => TimePrecision,
   _any: () => _any,
   _array: () => _array,
@@ -44933,7 +45213,7 @@ __export(core_exports2, {
 });
 
 // ../../node_modules/.pnpm/zod@3.25.76/node_modules/zod/v4/core/core.js
-var NEVER = Object.freeze({
+var NEVER2 = Object.freeze({
   status: "aborted"
 });
 // @__NO_SIDE_EFFECTS__
@@ -55509,7 +55789,7 @@ function check(fn) {
   ch._zod.check = fn;
   return ch;
 }
-function custom(fn, _params) {
+function custom2(fn, _params) {
   return _custom(ZodCustom, fn ?? (() => true), _params);
 }
 function refine(fn, _params = {}) {
@@ -55578,7 +55858,7 @@ var ZodIssueCode2 = {
   invalid_value: "invalid_value",
   custom: "custom"
 };
-function setErrorMap(map2) {
+function setErrorMap2(map2) {
   config({
     customError: map2
   });
@@ -55642,16 +55922,16 @@ function isColumnType(column, columnTypes) {
 function isWithEnum(column) {
   return "enumValues" in column && Array.isArray(column.enumValues) && column.enumValues.length > 0;
 }
-var literalSchema = external_exports.union([external_exports.string(), external_exports.number(), external_exports.boolean(), external_exports.null()]);
-var jsonSchema = external_exports.union([
+var literalSchema = external_exports2.union([external_exports2.string(), external_exports2.number(), external_exports2.boolean(), external_exports2.null()]);
+var jsonSchema = external_exports2.union([
   literalSchema,
-  external_exports.record(external_exports.string(), external_exports.any()),
-  external_exports.array(external_exports.any())
+  external_exports2.record(external_exports2.string(), external_exports2.any()),
+  external_exports2.array(external_exports2.any())
 ]);
-var bufferSchema = external_exports.custom((v) => v instanceof Buffer);
+var bufferSchema = external_exports2.custom((v) => v instanceof Buffer);
 function columnToSchema(column, factory) {
-  const z$1 = factory?.zodInstance ?? external_exports;
-  const coerce = factory?.coerce ?? {};
+  const z$1 = factory?.zodInstance ?? external_exports2;
+  const coerce2 = factory?.coerce ?? {};
   let schema;
   if (isWithEnum(column)) {
     schema = column.enumValues.length ? z$1.enum(column.enumValues) : z$1.string();
@@ -55678,15 +55958,15 @@ function columnToSchema(column, factory) {
     } else if (column.dataType === "array") {
       schema = z$1.array(z$1.any());
     } else if (column.dataType === "number") {
-      schema = numberColumnToSchema(column, z$1, coerce);
+      schema = numberColumnToSchema(column, z$1, coerce2);
     } else if (column.dataType === "bigint") {
-      schema = bigintColumnToSchema(column, z$1, coerce);
+      schema = bigintColumnToSchema(column, z$1, coerce2);
     } else if (column.dataType === "boolean") {
-      schema = coerce === true || coerce.boolean ? z$1.coerce.boolean() : z$1.boolean();
+      schema = coerce2 === true || coerce2.boolean ? z$1.coerce.boolean() : z$1.boolean();
     } else if (column.dataType === "date") {
-      schema = coerce === true || coerce.date ? z$1.coerce.date() : z$1.date();
+      schema = coerce2 === true || coerce2.date ? z$1.coerce.date() : z$1.date();
     } else if (column.dataType === "string") {
-      schema = stringColumnToSchema(column, z$1, coerce);
+      schema = stringColumnToSchema(column, z$1, coerce2);
     } else if (column.dataType === "json") {
       schema = jsonSchema;
     } else if (column.dataType === "custom") {
@@ -55700,7 +55980,7 @@ function columnToSchema(column, factory) {
   }
   return schema;
 }
-function numberColumnToSchema(column, z, coerce) {
+function numberColumnToSchema(column, z, coerce2) {
   let unsigned = column.getSQLType().includes("unsigned");
   let min;
   let max;
@@ -55768,18 +56048,18 @@ function numberColumnToSchema(column, z, coerce) {
     min = Number.MIN_SAFE_INTEGER;
     max = Number.MAX_SAFE_INTEGER;
   }
-  let schema = coerce === true || coerce?.number ? integer3 ? z.coerce.number() : z.coerce.number().int() : integer3 ? z.int() : z.number();
+  let schema = coerce2 === true || coerce2?.number ? integer3 ? z.coerce.number() : z.coerce.number().int() : integer3 ? z.int() : z.number();
   schema = schema.gte(min).lte(max);
   return schema;
 }
-function bigintColumnToSchema(column, z, coerce) {
+function bigintColumnToSchema(column, z, coerce2) {
   const unsigned = column.getSQLType().includes("unsigned");
   const min = unsigned ? 0n : CONSTANTS.INT64_MIN;
   const max = unsigned ? CONSTANTS.INT64_UNSIGNED_MAX : CONSTANTS.INT64_MAX;
-  const schema = coerce === true || coerce?.bigint ? z.coerce.bigint() : z.bigint();
+  const schema = coerce2 === true || coerce2?.bigint ? z.coerce.bigint() : z.bigint();
   return schema.gte(min).lte(max);
 }
-function stringColumnToSchema(column, z, coerce) {
+function stringColumnToSchema(column, z, coerce2) {
   if (isColumnType(column, ["PgUUID"])) {
     return z.uuid();
   }
@@ -55813,7 +56093,7 @@ function stringColumnToSchema(column, z, coerce) {
     regex = /^[01]+$/;
     max = column.dimensions;
   }
-  let schema = coerce === true || coerce?.string ? z.coerce.string() : z.string();
+  let schema = coerce2 === true || coerce2?.string ? z.coerce.string() : z.string();
   schema = regex ? schema.regex(regex) : schema;
   return max && fixed ? schema.length(max) : max ? schema.max(max) : schema;
 }
@@ -55834,7 +56114,7 @@ function handleColumns(columns, refinements, conditions, factory) {
       continue;
     }
     const column = is(selected, Column) ? selected : void 0;
-    const schema = column ? columnToSchema(column, factory) : external_exports.any();
+    const schema = column ? columnToSchema(column, factory) : external_exports2.any();
     const refined = typeof refinement === "function" ? refinement(schema) : schema;
     if (conditions.never(column)) {
       continue;
@@ -55850,7 +56130,7 @@ function handleColumns(columns, refinements, conditions, factory) {
       }
     }
   }
-  return external_exports.object(columnSchemas);
+  return external_exports2.object(columnSchemas);
 }
 var insertConditions = {
   never: (column) => column?.generated?.type === "always" || column?.generatedIdentity?.type === "always",
@@ -55886,6 +56166,14 @@ var insertLeadSchema = createInsertSchema(leadsTable, {
   email: true,
   attendees: true,
   message: true
+});
+var submitLeadSchema = external_exports.object({
+  name: external_exports.string().min(1).max(200),
+  company: external_exports.string().min(1).max(200),
+  email: external_exports.string().email().max(320),
+  attendees: external_exports.number().int().min(1).max(1e4),
+  message: external_exports.string().max(5e3).optional(),
+  website: external_exports.string().max(500).optional()
 });
 
 // ../../lib/db/src/index.ts
@@ -55967,7 +56255,7 @@ var logger = (0, import_pino.default)({
 // src/routes/leads.ts
 var router2 = (0, import_express2.Router)();
 router2.post("/leads", rateLimitOnePerWindow, async (req, res) => {
-  const parsed = insertLeadSchema.safeParse(req.body);
+  const parsed = submitLeadSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({
       error: "\xC9rv\xE9nytelen adatok",
@@ -55975,11 +56263,17 @@ router2.post("/leads", rateLimitOnePerWindow, async (req, res) => {
     });
     return;
   }
+  const ip = getClientIp(req);
+  if (parsed.data.website && parsed.data.website.trim().length > 0) {
+    logger.info({ ip }, "honeypot tripped");
+    res.status(201).json({ ok: true });
+    return;
+  }
   try {
     const ua = req.header("user-agent") ?? null;
-    const ip = getClientIp(req);
+    const { website: _drop, ...leadData } = parsed.data;
     await db.insert(leadsTable).values({
-      ...parsed.data,
+      ...leadData,
       sourceIp: ip,
       userAgent: ua
     });
@@ -56050,14 +56344,577 @@ router2.get("/leads.csv", requireAdminToken, async (_req, res) => {
 });
 var leads_default = router2;
 
-// src/routes/index.ts
+// src/routes/admin.ts
+var import_express3 = __toESM(require_express2(), 1);
+
+// src/lib/admin-session.ts
+import {
+  createHmac,
+  hkdfSync,
+  randomBytes,
+  timingSafeEqual as nodeTimingSafeEqual
+} from "node:crypto";
+var COOKIE_NAME = "admin_session";
+var TTL_MS = 4 * 60 * 60 * 1e3;
+var SALT = Buffer.from("works-admin-session-v1");
+var INFO = Buffer.from("cookie-signing-key");
+function getSigningKey() {
+  const token = process.env.ADMIN_TOKEN;
+  if (!token) return null;
+  const derived = hkdfSync("sha256", Buffer.from(token), SALT, INFO, 32);
+  return Buffer.from(derived);
+}
+function b64url(buf) {
+  return buf.toString("base64").replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+}
+function b64urlDecode(s) {
+  const pad = s.length % 4 === 0 ? "" : "=".repeat(4 - s.length % 4);
+  return Buffer.from(s.replace(/-/g, "+").replace(/_/g, "/") + pad, "base64");
+}
+function timingSafeEqualStr(a, b) {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) return false;
+  return nodeTimingSafeEqual(aBuf, bBuf);
+}
+function verifyAdminToken(provided) {
+  const expected = process.env.ADMIN_TOKEN;
+  if (!expected || !provided) return false;
+  const a = Buffer.from(provided);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length) return false;
+  return nodeTimingSafeEqual(a, b);
+}
+function issueSessionCookie(res) {
+  const key = getSigningKey();
+  if (!key) return false;
+  const now = Date.now();
+  const payload = {
+    iat: now,
+    exp: now + TTL_MS,
+    nonce: b64url(randomBytes(12))
+  };
+  const payloadB64 = b64url(Buffer.from(JSON.stringify(payload)));
+  const sig = b64url(createHmac("sha256", key).update(payloadB64).digest());
+  const value = `${payloadB64}.${sig}`;
+  const secure = process.env.NODE_ENV === "production";
+  res.cookie(COOKIE_NAME, value, {
+    httpOnly: true,
+    secure,
+    sameSite: "strict",
+    path: "/",
+    maxAge: TTL_MS
+  });
+  return true;
+}
+function clearSessionCookie(res) {
+  const secure = process.env.NODE_ENV === "production";
+  res.clearCookie(COOKIE_NAME, {
+    httpOnly: true,
+    secure,
+    sameSite: "strict",
+    path: "/"
+  });
+}
+function verifyCookie(value) {
+  const key = getSigningKey();
+  if (!key) return false;
+  const idx = value.lastIndexOf(".");
+  if (idx <= 0) return false;
+  const payloadB64 = value.slice(0, idx);
+  const sig = value.slice(idx + 1);
+  const expected = b64url(createHmac("sha256", key).update(payloadB64).digest());
+  if (!timingSafeEqualStr(sig, expected)) return false;
+  try {
+    const payload = JSON.parse(b64urlDecode(payloadB64).toString("utf8"));
+    if (typeof payload.exp !== "number") return false;
+    if (Date.now() > payload.exp) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+function hasValidSession(req) {
+  const cookies = req.cookies;
+  const raw = cookies?.[COOKIE_NAME];
+  if (!raw) return false;
+  return verifyCookie(raw);
+}
+function requireAdminSession(req, res, next) {
+  if (!process.env.ADMIN_TOKEN) {
+    res.status(503).json({ error: "Admin endpoint not configured" });
+    return;
+  }
+  if (!hasValidSession(req)) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  next();
+}
+
+// src/lib/login-rate-limit.ts
+var WINDOW_MS2 = 15 * 60 * 1e3;
+var MAX_ATTEMPTS = 5;
+var attemptsByIp = /* @__PURE__ */ new Map();
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, e] of attemptsByIp) {
+    if (e.resetAt < now) attemptsByIp.delete(ip);
+  }
+}, 6e4).unref?.();
+function rateLimitLogin(req, res, next) {
+  const ip = getClientIp(req);
+  const now = Date.now();
+  const e = attemptsByIp.get(ip);
+  if (!e || e.resetAt < now) {
+    attemptsByIp.set(ip, { count: 1, resetAt: now + WINDOW_MS2 });
+    next();
+    return;
+  }
+  if (e.count >= MAX_ATTEMPTS) {
+    const retryAfter = Math.ceil((e.resetAt - now) / 1e3);
+    res.setHeader("Retry-After", String(retryAfter));
+    res.status(429).json({ error: "T\xFAl sok pr\xF3b\xE1lkoz\xE1s. Pr\xF3b\xE1ld \xFAjra 15 perc m\xFAlva." });
+    return;
+  }
+  e.count += 1;
+  next();
+}
+function resetLoginAttempts(ip) {
+  attemptsByIp.delete(ip);
+}
+
+// src/routes/admin.ts
 var router3 = (0, import_express3.Router)();
-router3.use(health_default);
-router3.use(leads_default);
-var routes_default = router3;
+router3.post("/admin/login", rateLimitLogin, (req, res) => {
+  if (!process.env.ADMIN_TOKEN) {
+    res.status(503).json({ error: "Admin endpoint not configured" });
+    return;
+  }
+  const body = req.body ?? {};
+  const provided = typeof body.token === "string" ? body.token.trim() : "";
+  if (!verifyAdminToken(provided)) {
+    res.status(401).json({ error: "Hib\xE1s bel\xE9p\xE9si kulcs." });
+    return;
+  }
+  if (!issueSessionCookie(res)) {
+    res.status(503).json({ error: "Admin endpoint not configured" });
+    return;
+  }
+  resetLoginAttempts(getClientIp(req));
+  res.json({ ok: true });
+});
+router3.post("/admin/logout", (_req, res) => {
+  clearSessionCookie(res);
+  res.json({ ok: true });
+});
+router3.get("/admin/me", (req, res) => {
+  if (!hasValidSession(req)) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  res.json({ ok: true });
+});
+router3.get("/admin/leads", requireAdminSession, async (_req, res) => {
+  try {
+    const rows = await db.select().from(leadsTable).orderBy(desc(leadsTable.createdAt));
+    res.json({ count: rows.length, leads: rows });
+  } catch (err) {
+    logger.error({ err }, "Failed to fetch admin leads");
+    res.status(500).json({ error: "Lek\xE9rdez\xE9s sikertelen" });
+  }
+});
+function escapeCsv(v) {
+  if (v === null || v === void 0) return "";
+  let s = v instanceof Date ? v.toISOString() : String(v);
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+  if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+}
+router3.get("/admin/leads.csv", requireAdminSession, async (_req, res) => {
+  try {
+    const rows = await db.select().from(leadsTable).orderBy(desc(leadsTable.createdAt));
+    const headers = [
+      "created_at",
+      "name",
+      "company",
+      "email",
+      "attendees",
+      "message",
+      "source_ip",
+      "user_agent",
+      "id"
+    ];
+    const lines = [headers.join(",")];
+    for (const r of rows) {
+      lines.push(
+        [
+          escapeCsv(r.createdAt),
+          escapeCsv(r.name),
+          escapeCsv(r.company),
+          escapeCsv(r.email),
+          escapeCsv(r.attendees),
+          escapeCsv(r.message),
+          escapeCsv(r.sourceIp),
+          escapeCsv(r.userAgent),
+          escapeCsv(r.id)
+        ].join(",")
+      );
+    }
+    const csv = "\uFEFF" + lines.join("\r\n") + "\r\n";
+    const today = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="leads-${today}.csv"`
+    );
+    res.send(csv);
+  } catch (err) {
+    logger.error({ err }, "Failed to export admin leads CSV");
+    res.status(500).json({ error: "Export sikertelen" });
+  }
+});
+var admin_default = router3;
+
+// src/routes/index.ts
+var router4 = (0, import_express4.Router)();
+router4.use(health_default);
+router4.use(leads_default);
+router4.use(admin_default);
+var routes_default = router4;
+
+// src/routes/admin-page.ts
+var import_express5 = __toESM(require_express2(), 1);
+var router5 = (0, import_express5.Router)();
+var HTML = `<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Works. \u2014 Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral: #EE3956;
+    --aubergine: #2A1A2E;
+    --bg: #FBF7F5;
+    --muted: #6B5E70;
+    --hairline: #E7DCE0;
+    --white: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Mulish', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--aubergine);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--white);
+  }
+  .brand {
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .brand .dot { color: var(--coral); }
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--aubergine);
+    background: var(--aubergine);
+    color: var(--white);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    line-height: 1.4;
+  }
+  .btn:hover { opacity: 0.9; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--aubergine);
+  }
+  .btn-coral { background: var(--coral); border-color: var(--coral); }
+  .container { max-width: 1200px; margin: 0 auto; padding: 28px; }
+  h1 { font-size: 22px; font-weight: 800; margin: 0 0 6px 0; }
+  .sub { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  .login-card {
+    max-width: 420px;
+    margin: 80px auto;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 8px 32px rgba(42, 26, 46, 0.06);
+  }
+  .login-card h1 { margin-bottom: 8px; }
+  label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--aubergine); }
+  input[type="password"] {
+    font-family: inherit;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--hairline);
+    font-size: 15px;
+    color: var(--aubergine);
+    background: var(--white);
+    outline: none;
+  }
+  input[type="password"]:focus {
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(238, 57, 86, 0.15);
+  }
+  .err {
+    color: var(--coral);
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 18px;
+  }
+  .table-wrap {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead {
+    background: var(--aubergine);
+    color: var(--white);
+    position: sticky;
+    top: 0;
+  }
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--hairline);
+  }
+  th { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  tbody tr:hover { background: #FAF4F5; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.mono { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px; color: var(--muted); }
+  td.msg { max-width: 320px; white-space: pre-wrap; word-break: break-word; }
+  .empty {
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--muted);
+  }
+  .stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: baseline;
+  }
+  .count {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--aubergine);
+  }
+  .count-label { color: var(--muted); font-size: 14px; }
+  .actions { display: flex; gap: 10px; }
+  .hidden { display: none !important; }
+  @media (max-width: 720px) {
+    .container { padding: 16px; }
+    th, td { padding: 8px 8px; font-size: 12px; }
+    td.msg { max-width: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="login-view">
+  <div class="login-card">
+    <h1>Works. <span style="color:var(--coral)">admin</span></h1>
+    <p class="sub">Add meg a bel\xE9p\xE9si kulcsot a leadek megtekint\xE9s\xE9hez.</p>
+    <form id="login-form" autocomplete="off">
+      <label for="token">Bel\xE9p\xE9si kulcs</label>
+      <input type="password" id="token" name="token" autocomplete="off" autofocus required />
+      <div class="err" id="login-err" role="alert"></div>
+      <button type="submit" class="btn btn-coral" style="width:100%;margin-top:12px;padding:12px 16px;font-size:15px">Bel\xE9p\xE9s</button>
+    </form>
+  </div>
+</div>
+
+<div id="admin-view" class="hidden">
+  <div class="topbar">
+    <div class="brand">Works.<span class="dot">.</span> admin</div>
+    <div class="topbar-actions">
+      <a class="btn btn-ghost" id="csv-btn" href="/api/admin/leads.csv">CSV let\xF6lt\xE9s</a>
+      <button class="btn btn-ghost" id="logout-btn" type="button">Kijelentkez\xE9s</button>
+    </div>
+  </div>
+  <div class="container">
+    <h1>Be\xE9rkezett jelentkez\xE9sek</h1>
+    <p class="sub">Legfrissebb fel\xFCl. Friss\xEDt\xE9shez t\xF6ltsd \xFAjra az oldalt.</p>
+    <div class="stats">
+      <span class="count" id="count">\u2013</span>
+      <span class="count-label">jelentkez\xE9s \xF6sszesen</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Id\u0151pont</th>
+            <th>N\xE9v</th>
+            <th>C\xE9g</th>
+            <th>Email</th>
+            <th class="num">F\u0151</th>
+            <th>\xDCzenet</th>
+            <th>IP</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty hidden" id="empty">M\xE9g nem \xE9rkezett jelentkez\xE9s.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var loginView = document.getElementById('login-view');
+  var adminView = document.getElementById('admin-view');
+  var loginForm = document.getElementById('login-form');
+  var tokenInput = document.getElementById('token');
+  var loginErr = document.getElementById('login-err');
+  var rowsEl = document.getElementById('rows');
+  var emptyEl = document.getElementById('empty');
+  var countEl = document.getElementById('count');
+  var logoutBtn = document.getElementById('logout-btn');
+
+  function showLogin() {
+    adminView.classList.add('hidden');
+    loginView.classList.remove('hidden');
+    setTimeout(function () { tokenInput.focus(); }, 0);
+  }
+  function showAdmin() {
+    loginView.classList.add('hidden');
+    adminView.classList.remove('hidden');
+    loadLeads();
+  }
+  function fmtDate(s) {
+    try {
+      var d = new Date(s);
+      return d.toLocaleString('hu-HU', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+      });
+    } catch (e) { return String(s); }
+  }
+  function escapeHtml(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  async function loadLeads() {
+    rowsEl.innerHTML = '';
+    emptyEl.classList.add('hidden');
+    countEl.textContent = '\u2013';
+    try {
+      var r = await fetch('/api/admin/leads', { credentials: 'same-origin' });
+      if (r.status === 401) { showLogin(); return; }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      var data = await r.json();
+      var leads = data.leads || [];
+      countEl.textContent = String(leads.length);
+      if (leads.length === 0) {
+        emptyEl.classList.remove('hidden');
+        return;
+      }
+      var html = '';
+      for (var i = 0; i < leads.length; i++) {
+        var L = leads[i];
+        html += '<tr>'
+          + '<td>' + escapeHtml(fmtDate(L.createdAt)) + '</td>'
+          + '<td>' + escapeHtml(L.name) + '</td>'
+          + '<td>' + escapeHtml(L.company) + '</td>'
+          + '<td><a href="mailto:' + escapeHtml(L.email) + '" style="color:var(--coral);text-decoration:none">' + escapeHtml(L.email) + '</a></td>'
+          + '<td class="num">' + escapeHtml(L.attendees) + '</td>'
+          + '<td class="msg">' + escapeHtml(L.message || '') + '</td>'
+          + '<td class="mono">' + escapeHtml(L.sourceIp || '') + '</td>'
+          + '</tr>';
+      }
+      rowsEl.innerHTML = html;
+    } catch (e) {
+      rowsEl.innerHTML = '<tr><td colspan="7" style="color:var(--coral);padding:20px">Nem siker\xFClt lek\xE9rdezni a leadeket. Friss\xEDtsd az oldalt.</td></tr>';
+    }
+  }
+
+  loginForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    loginErr.textContent = '';
+    var btn = loginForm.querySelector('button[type=submit]');
+    btn.disabled = true;
+    var prev = btn.textContent;
+    btn.textContent = 'Bel\xE9p\xE9s\u2026';
+    try {
+      var r = await fetch('/api/admin/login', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token: tokenInput.value })
+      });
+      if (r.status === 429) {
+        loginErr.textContent = 'T\xFAl sok pr\xF3b\xE1lkoz\xE1s. Pr\xF3b\xE1ld \xFAjra 15 perc m\xFAlva.';
+        return;
+      }
+      if (!r.ok) {
+        loginErr.textContent = 'Hib\xE1s bel\xE9p\xE9si kulcs.';
+        tokenInput.select();
+        return;
+      }
+      tokenInput.value = '';
+      showAdmin();
+    } catch (err) {
+      loginErr.textContent = 'H\xE1l\xF3zati hiba. Pr\xF3b\xE1ld \xFAjra.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = prev;
+    }
+  });
+
+  logoutBtn.addEventListener('click', async function () {
+    try { await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }); } catch (e) {}
+    showLogin();
+  });
+
+  (async function init() {
+    try {
+      var r = await fetch('/api/admin/me', { credentials: 'same-origin' });
+      if (r.ok) { showAdmin(); } else { showLogin(); }
+    } catch (e) { showLogin(); }
+  })();
+})();
+</script>
+</body>
+</html>
+`;
+router5.get("/admin", (_req, res) => {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  res.send(HTML);
+});
+var admin_page_default = router5;
 
 // src/app.ts
-var app = (0, import_express4.default)();
+var app = (0, import_express6.default)();
 app.set("trust proxy", 1);
 app.use(
   (0, import_pino_http.default)({
@@ -56079,14 +56936,16 @@ app.use(
   })
 );
 app.use((0, import_cors.default)());
-app.use(import_express4.default.json());
-app.use(import_express4.default.urlencoded({ extended: true }));
+app.use((0, import_cookie_parser.default)());
+app.use(import_express6.default.json());
+app.use(import_express6.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
+app.use(admin_page_default);
 var isProduction2 = process.env.NODE_ENV === "production";
 var staticDir = process.env.STATIC_DIR;
 if (isProduction2 && staticDir && fs2.existsSync(staticDir)) {
   logger.info({ staticDir }, "Serving static SPA");
-  app.use(import_express4.default.static(staticDir, { index: false, maxAge: "1h" }));
+  app.use(import_express6.default.static(staticDir, { index: false, maxAge: "1h" }));
   const indexHtml = path.join(staticDir, "index.html");
   app.use((req, res, next) => {
     if (req.method !== "GET") return next();
@@ -56423,5 +57282,13 @@ object-assign/index.js:
   (c) Sindre Sorhus
   @license MIT
   *)
+
+cookie-parser/index.js:
+  (*!
+   * cookie-parser
+   * Copyright(c) 2014 TJ Holowaychuk
+   * Copyright(c) 2015 Douglas Christopher Wilson
+   * MIT Licensed
+   *)
 */
 //# sourceMappingURL=index.mjs.map
