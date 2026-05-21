@@ -1,12 +1,10 @@
-# syntax=docker/dockerfile:1.7
 FROM node:20-alpine AS base
 RUN corepack enable
 WORKDIR /app
 
 FROM base AS build
 COPY . .
-RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
-    pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 ENV BASE_PATH=/
 RUN pnpm --filter @workspace/works-landing build \
  && pnpm --filter @workspace/api-server build
