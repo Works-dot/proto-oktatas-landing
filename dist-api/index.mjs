@@ -56486,7 +56486,7 @@ function resetLoginAttempts(ip) {
 
 // src/routes/admin.ts
 var router3 = (0, import_express3.Router)();
-router3.post("/admin/login", rateLimitLogin, (req, res) => {
+router3.post("/submissions/login", rateLimitLogin, (req, res) => {
   if (!process.env.ADMIN_TOKEN) {
     res.status(503).json({ error: "Admin endpoint not configured" });
     return;
@@ -56504,18 +56504,18 @@ router3.post("/admin/login", rateLimitLogin, (req, res) => {
   resetLoginAttempts(getClientIp(req));
   res.json({ ok: true });
 });
-router3.post("/admin/logout", (_req, res) => {
+router3.post("/submissions/logout", (_req, res) => {
   clearSessionCookie(res);
   res.json({ ok: true });
 });
-router3.get("/admin/me", (req, res) => {
+router3.get("/submissions/me", (req, res) => {
   if (!hasValidSession(req)) {
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
   res.json({ ok: true });
 });
-router3.get("/admin/leads", requireAdminSession, async (_req, res) => {
+router3.get("/submissions", requireAdminSession, async (_req, res) => {
   try {
     const rows = await db.select().from(leadsTable).orderBy(desc(leadsTable.createdAt));
     res.json({ count: rows.length, leads: rows });
@@ -56531,7 +56531,7 @@ function escapeCsv(v) {
   if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
   return s;
 }
-router3.get("/admin/leads.csv", requireAdminSession, async (_req, res) => {
+router3.get("/submissions.csv", requireAdminSession, async (_req, res) => {
   try {
     const rows = await db.select().from(leadsTable).orderBy(desc(leadsTable.createdAt));
     const headers = [
@@ -56592,7 +56592,7 @@ var HTML = `<!doctype html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="robots" content="noindex,nofollow" />
-<title>Works. \u2014 Admin</title>
+<title>Works. \u2014 Jelentkez\xE9sek</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -56690,7 +56690,7 @@ var HTML = `<!doctype html>
     border-radius: 16px;
     overflow: hidden;
   }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
   thead {
     background: var(--aubergine);
     color: var(--white);
@@ -56702,12 +56702,19 @@ var HTML = `<!doctype html>
     text-align: left;
     vertical-align: top;
     border-bottom: 1px solid var(--hairline);
+    overflow-wrap: break-word;
   }
   th { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  /* Explicit column widths: message gets ~half the table, others stay compact. */
+  col.c-date { width: 11%; }
+  col.c-name { width: 13%; }
+  col.c-company { width: 13%; }
+  col.c-email { width: 17%; }
+  col.c-att { width: 6%; }
+  col.c-msg { width: 40%; }
   tbody tr:hover { background: #FAF4F5; }
   td.num { text-align: right; font-variant-numeric: tabular-nums; }
-  td.mono { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 12px; color: var(--muted); }
-  td.msg { max-width: 320px; white-space: pre-wrap; word-break: break-word; }
+  td.msg { white-space: pre-wrap; word-break: break-word; line-height: 1.45; }
   .empty {
     padding: 60px 20px;
     text-align: center;
@@ -56730,7 +56737,8 @@ var HTML = `<!doctype html>
   @media (max-width: 720px) {
     .container { padding: 16px; }
     th, td { padding: 8px 8px; font-size: 12px; }
-    td.msg { max-width: 180px; }
+    .table-wrap { overflow-x: auto; }
+    table { min-width: 720px; }
   }
 </style>
 </head>
@@ -56738,8 +56746,8 @@ var HTML = `<!doctype html>
 
 <div id="login-view">
   <div class="login-card">
-    <h1>Works. <span style="color:var(--coral)">admin</span></h1>
-    <p class="sub">Add meg a bel\xE9p\xE9si kulcsot a leadek megtekint\xE9s\xE9hez.</p>
+    <h1>Works. <span style="color:var(--coral)">jelentkez\xE9sek</span></h1>
+    <p class="sub">Add meg a bel\xE9p\xE9si kulcsot a jelentkez\xE9sek megtekint\xE9s\xE9hez.</p>
     <form id="login-form" autocomplete="off">
       <label for="token">Bel\xE9p\xE9si kulcs</label>
       <input type="password" id="token" name="token" autocomplete="off" autofocus required />
@@ -56751,9 +56759,9 @@ var HTML = `<!doctype html>
 
 <div id="admin-view" class="hidden">
   <div class="topbar">
-    <div class="brand">Works.<span class="dot">.</span> admin</div>
+    <div class="brand">Works.<span class="dot">.</span> jelentkez\xE9sek</div>
     <div class="topbar-actions">
-      <a class="btn btn-ghost" id="csv-btn" href="/api/admin/leads.csv">CSV let\xF6lt\xE9s</a>
+      <a class="btn btn-ghost" id="csv-btn" href="/api/submissions.csv">CSV let\xF6lt\xE9s</a>
       <button class="btn btn-ghost" id="logout-btn" type="button">Kijelentkez\xE9s</button>
     </div>
   </div>
@@ -56766,6 +56774,14 @@ var HTML = `<!doctype html>
     </div>
     <div class="table-wrap">
       <table>
+        <colgroup>
+          <col class="c-date" />
+          <col class="c-name" />
+          <col class="c-company" />
+          <col class="c-email" />
+          <col class="c-att" />
+          <col class="c-msg" />
+        </colgroup>
         <thead>
           <tr>
             <th>Id\u0151pont</th>
@@ -56774,8 +56790,6 @@ var HTML = `<!doctype html>
             <th>Email</th>
             <th class="num">F\u0151</th>
             <th>\xDCzenet</th>
-            <th>IP</th>
-            <th>User agent</th>
           </tr>
         </thead>
         <tbody id="rows"></tbody>
@@ -56828,7 +56842,7 @@ var HTML = `<!doctype html>
     emptyEl.classList.add('hidden');
     countEl.textContent = '\u2013';
     try {
-      var r = await fetch('/api/admin/leads', { credentials: 'same-origin' });
+      var r = await fetch('/api/submissions', { credentials: 'same-origin' });
       if (r.status === 401) { showLogin(); return; }
       if (!r.ok) throw new Error('HTTP ' + r.status);
       var data = await r.json();
@@ -56845,16 +56859,14 @@ var HTML = `<!doctype html>
           + '<td>' + escapeHtml(fmtDate(L.createdAt)) + '</td>'
           + '<td>' + escapeHtml(L.name) + '</td>'
           + '<td>' + escapeHtml(L.company) + '</td>'
-          + '<td><a href="mailto:' + escapeHtml(L.email) + '" style="color:var(--coral);text-decoration:none">' + escapeHtml(L.email) + '</a></td>'
+          + '<td><a href="mailto:' + escapeHtml(L.email) + '" style="color:var(--coral);text-decoration:none;word-break:break-all">' + escapeHtml(L.email) + '</a></td>'
           + '<td class="num">' + escapeHtml(L.attendees) + '</td>'
           + '<td class="msg">' + escapeHtml(L.message || '') + '</td>'
-          + '<td class="mono">' + escapeHtml(L.sourceIp || '') + '</td>'
-          + '<td class="mono" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + escapeHtml(L.userAgent || '') + '">' + escapeHtml(L.userAgent || '') + '</td>'
           + '</tr>';
       }
       rowsEl.innerHTML = html;
     } catch (e) {
-      rowsEl.innerHTML = '<tr><td colspan="8" style="color:var(--coral);padding:20px">Nem siker\xFClt lek\xE9rdezni a leadeket. Friss\xEDtsd az oldalt.</td></tr>';
+      rowsEl.innerHTML = '<tr><td colspan="6" style="color:var(--coral);padding:20px">Nem siker\xFClt lek\xE9rdezni a jelentkez\xE9seket. Friss\xEDtsd az oldalt.</td></tr>';
     }
   }
 
@@ -56866,7 +56878,7 @@ var HTML = `<!doctype html>
     var prev = btn.textContent;
     btn.textContent = 'Bel\xE9p\xE9s\u2026';
     try {
-      var r = await fetch('/api/admin/login', {
+      var r = await fetch('/api/submissions/login', {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'content-type': 'application/json' },
@@ -56892,13 +56904,13 @@ var HTML = `<!doctype html>
   });
 
   logoutBtn.addEventListener('click', async function () {
-    try { await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }); } catch (e) {}
+    try { await fetch('/api/submissions/logout', { method: 'POST', credentials: 'same-origin' }); } catch (e) {}
     showLogin();
   });
 
   (async function init() {
     try {
-      var r = await fetch('/api/admin/me', { credentials: 'same-origin' });
+      var r = await fetch('/api/submissions/me', { credentials: 'same-origin' });
       if (r.ok) { showAdmin(); } else { showLogin(); }
     } catch (e) { showLogin(); }
   })();
@@ -56907,7 +56919,7 @@ var HTML = `<!doctype html>
 </body>
 </html>
 `;
-router5.get("/admin", (_req, res) => {
+router5.get("/submissions", (_req, res) => {
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Robots-Tag", "noindex, nofollow");
