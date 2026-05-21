@@ -56713,7 +56713,7 @@ var HTML = `<!doctype html>
   col.c-att { width: 6%; }
   col.c-msg { width: 40%; }
   tbody tr:hover { background: #FAF4F5; }
-  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.num { font-variant-numeric: tabular-nums; }
   td.msg { white-space: pre-wrap; word-break: break-word; line-height: 1.45; }
   .empty {
     padding: 60px 20px;
@@ -56824,9 +56824,8 @@ var HTML = `<!doctype html>
   function fmtDate(s) {
     try {
       var d = new Date(s);
-      return d.toLocaleString('hu-HU', {
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit'
+      return d.toLocaleDateString('hu-HU', {
+        year: 'numeric', month: '2-digit', day: '2-digit'
       });
     } catch (e) { return String(s); }
   }
