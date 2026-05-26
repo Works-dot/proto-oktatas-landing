@@ -30,5 +30,20 @@ export const insertLeadSchema = createInsertSchema(leadsTable, {
   message: true,
 });
 
-export type InsertLead = z.infer<typeof insertLeadSchema>;
+// Wire payload schema = real fields + honeypot. The `website` field is a
+// hidden trap: humans never fill it, bots usually do. When set, the server
+// silently accepts the request but does NOT persist anything. Defined
+// standalone (not via insertLeadSchema.extend) because drizzle-zod returns a
+// schema that may not be on the same Zod runtime as our local `z` import.
+export const submitLeadSchema = z.object({
+  name: z.string().min(1).max(200),
+  company: z.string().min(1).max(200),
+  email: z.string().email().max(320),
+  attendees: z.number().int().min(1).max(10000),
+  message: z.string().max(5000).optional(),
+  website: z.string().max(500).optional(),
+});
+
+export type InsertLead = typeof leadsTable.$inferInsert;
+export type SubmitLead = z.infer<typeof submitLeadSchema>;
 export type Lead = typeof leadsTable.$inferSelect;

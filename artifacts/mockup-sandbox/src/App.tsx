@@ -36,8 +36,9 @@ function PreviewRenderer({
     setError(null);
 
     async function loadComponent(): Promise<void> {
-      const key = `./components/mockups/${componentPath}.tsx`;
-      const loader = modules[key];
+      const directKey = `./components/mockups/${componentPath}.tsx`;
+      const indexKey = `./components/mockups/${componentPath}/index.tsx`;
+      const loader = modules[directKey] ?? modules[indexKey];
       if (!loader) {
         setError(`No component found at ${componentPath}.tsx`);
         return;

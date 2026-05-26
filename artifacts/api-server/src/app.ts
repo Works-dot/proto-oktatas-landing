@@ -2,8 +2,10 @@ import path from "node:path";
 import fs from "node:fs";
 import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import router from "./routes";
+import adminPageRouter from "./routes/admin-page";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
@@ -33,10 +35,14 @@ app.use(
   }),
 );
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", router);
+// Admin HTML page must be mounted before the SPA catch-all so it isn't
+// shadowed by the static index.html fallback below.
+app.use(adminPageRouter);
 
 const isProduction = process.env.NODE_ENV === "production";
 const staticDir = process.env.STATIC_DIR;

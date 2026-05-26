@@ -1,14 +1,31 @@
-FROM node:22-slim
+FROM node:22-slim AS base
+RUN corepack enable
 WORKDIR /app
+ENV SKIP_PM_CHECK=1
 
-COPY dist-api ./dist-api
-COPY public ./public
-COPY drizzle ./drizzle
+FROM base AS build
+COPY . .
+RUN pnpm install --frozen-lockfile
+ENV BASE_PATH=/
+RUN pnpm --filter @workspace/works-landing build \
+ && pnpm --filter @workspace/api-server build
 
+FROM base AS runtime
 ENV NODE_ENV=production
-ENV STATIC_DIR=/app/public
-ENV MIGRATIONS_DIR=/app/drizzle
+ENV STATIC_DIR=/app/artifacts/works-landing/dist/public
 ENV PORT=3000
 
+COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/artifacts/api-server/package.json ./artifacts/api-server/package.json
+COPY --from=build /app/artifacts/api-server/dist ./artifacts/api-server/dist
+COPY --from=build /app/artifacts/api-server/node_modules ./artifacts/api-server/node_modules
+COPY --from=build /app/artifacts/works-landing/package.json ./artifacts/works-landing/package.json
+COPY --from=build /app/artifacts/works-landing/dist ./artifacts/works-landing/dist
+COPY --from=build /app/lib/db ./lib/db
+# Ensure the migrations folder is present (drizzle-kit migrate reads from `out`)
+COPY --from=build /app/lib/db/drizzle ./lib/db/drizzle
+COPY --from=build /app/lib/api-zod ./lib/api-zod
+
 EXPOSE 3000
-CMD ["node", "--enable-source-maps", "./dist-api/index.mjs"]
+CMD ["sh", "-c", "pnpm --filter @workspace/db run migrate && node --enable-source-maps ./artifacts/api-server/dist/index.mjs"]

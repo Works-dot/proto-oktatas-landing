@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { desc } from "drizzle-orm";
-import { db, leadsTable, insertLeadSchema } from "@workspace/db";
+import { db, leadsTable, submitLeadSchema } from "@workspace/db";
 import { requireAdminToken } from "../lib/admin-auth";
 import { rateLimitOnePerWindow, getClientIp } from "../lib/rate-limit";
 import { logger } from "../lib/logger";
@@ -8,7 +8,7 @@ import { logger } from "../lib/logger";
 const router: IRouter = Router();
 
 router.post("/leads", rateLimitOnePerWindow, async (req, res) => {
-  const parsed = insertLeadSchema.safeParse(req.body);
+  const parsed = submitLeadSchema.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({
       error: "Érvénytelen adatok",
@@ -16,11 +16,20 @@ router.post("/leads", rateLimitOnePerWindow, async (req, res) => {
     });
     return;
   }
+  const ip = getClientIp(req);
+  // Honeypot: bots fill the hidden `website` field; humans never do. Silently
+  // accept and discard so the bot can't learn it was rejected. Never log the
+  // honeypot value itself (potential PII / spam payload).
+  if (parsed.data.website && parsed.data.website.trim().length > 0) {
+    logger.info({ ip }, "honeypot tripped");
+    res.status(201).json({ ok: true });
+    return;
+  }
   try {
     const ua = req.header("user-agent") ?? null;
-    const ip = getClientIp(req);
+    const { website: _drop, ...leadData } = parsed.data;
     await db.insert(leadsTable).values({
-      ...parsed.data,
+      ...leadData,
       sourceIp: ip,
       userAgent: ua,
     });

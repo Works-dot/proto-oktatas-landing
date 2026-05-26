@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import CookieBanner from "./CookieBanner";
+import PrivacyPolicy from "./PrivacyPolicy";
 
-const COLORS = {
+export const COLORS = {
   coral: "#EE3956",
   coralHover: "#D62E48",
   coralSoft: "#FCE3E7",
@@ -12,9 +14,9 @@ const COLORS = {
 
 const PROTO_IMG = `${import.meta.env.BASE_URL}images/hero-mockup.png`;
 const OFFICE_IMG = `${import.meta.env.BASE_URL}images/works-office.jpg`;
-const LOGO_IMG = `${import.meta.env.BASE_URL}images/works-logo.png`;
+export const LOGO_IMG = `${import.meta.env.BASE_URL}images/works-logo.png`;
 
-function Logo({ size = "md", variant = "dark" }: { size?: "md" | "lg"; variant?: "dark" | "light" }) {
+export function Logo({ size = "md", variant = "dark" }: { size?: "md" | "lg"; variant?: "dark" | "light" }) {
   const heightPx = size === "lg" ? 36 : 30;
   return (
     <img
@@ -31,7 +33,7 @@ function Logo({ size = "md", variant = "dark" }: { size?: "md" | "lg"; variant?:
 }
 
 const pillBase =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors";
+  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors cursor-pointer disabled:cursor-not-allowed";
 const pillSizes = {
   md: "px-7 py-3 text-sm",
   lg: "px-9 py-4 text-base",
@@ -52,7 +54,15 @@ function pillStyleFor(variant: PillVariant): React.CSSProperties {
 
 function applyPillHover(el: HTMLElement, variant: PillVariant, hovered: boolean) {
   if (variant === "outline") {
-    el.style.backgroundColor = hovered ? COLORS.coralSoft : "transparent";
+    if (hovered) {
+      el.style.backgroundColor = COLORS.coral;
+      el.style.color = "#FFFFFF";
+      el.style.borderColor = COLORS.coral;
+    } else {
+      el.style.backgroundColor = "transparent";
+      el.style.color = COLORS.coral;
+      el.style.borderColor = COLORS.coral;
+    }
   } else {
     el.style.backgroundColor = hovered ? COLORS.coralHover : COLORS.coral;
   }
@@ -63,7 +73,7 @@ interface PillExtra {
   size?: keyof typeof pillSizes;
 }
 
-function PillButton(
+export function PillButton(
   props: React.ButtonHTMLAttributes<HTMLButtonElement> & PillExtra,
 ) {
   const { className = "", style, variant = "primary", size = "md", onMouseEnter, onMouseLeave, ...rest } = props;
@@ -84,7 +94,7 @@ function PillButton(
   );
 }
 
-function PillLink(
+export function PillLink(
   props: React.AnchorHTMLAttributes<HTMLAnchorElement> & PillExtra,
 ) {
   const { className = "", style, variant = "primary", size = "md", onMouseEnter, onMouseLeave, ...rest } = props;
@@ -102,6 +112,31 @@ function PillLink(
         onMouseLeave?.(e);
       }}
     />
+  );
+}
+
+function FieldLabel({
+  htmlFor,
+  required,
+  children,
+}: {
+  htmlFor: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <label
+      htmlFor={htmlFor}
+      className="block text-sm font-medium mb-1.5"
+      style={{ color: COLORS.dark }}
+    >
+      {children}
+      {required && (
+        <span aria-hidden="true" style={{ color: COLORS.coral, marginLeft: 2 }}>
+          *
+        </span>
+      )}
+    </label>
   );
 }
 
@@ -165,7 +200,7 @@ function Diamond() {
       style={{
         width: 10,
         height: 10,
-        backgroundColor: COLORS.warm,
+        backgroundColor: "#C9C0CD",
         transform: "rotate(45deg)",
         marginTop: "0.55em",
       }}
@@ -174,24 +209,50 @@ function Diamond() {
 }
 
 function Landing() {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div
       className="font-['Mulish'] antialiased min-h-screen"
       style={{ backgroundColor: "#FFFFFF", color: COLORS.dark }}
     >
-      {/* Navigation — sticky */}
+      {/* Navigation — sticky, shrinks on scroll */}
       <nav
-        className="sticky top-0 z-50 px-6 py-4 backdrop-blur"
+        className={`sticky top-0 z-50 px-6 backdrop-blur transition-[padding,box-shadow,background-color] duration-200 ${
+          scrolled ? "py-2 md:py-2.5" : "py-4 md:py-5"
+        }`}
         style={{
-          backgroundColor: "rgba(255,255,255,0.85)",
+          backgroundColor: scrolled
+            ? "rgba(255,255,255,0.95)"
+            : "rgba(255,255,255,0.85)",
           borderBottom: `1px solid ${COLORS.hairline}`,
+          boxShadow: scrolled ? "0 1px 8px rgba(42,26,46,0.06)" : "none",
         }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="https://worksdot.hu" aria-label="Works.">
+          <a
+            href={import.meta.env.BASE_URL}
+            aria-label="Works."
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.assign(import.meta.env.BASE_URL);
+            }}
+          >
             <Logo />
           </a>
-          <PillLink href="https://worksdot.hu/contact" variant="outline">
+          <PillLink
+            href="https://worksdot.hu/contact"
+            variant="outline"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs px-4 py-2 md:text-sm md:px-7 md:py-3"
+          >
             Kapcsolat
           </PillLink>
         </div>
@@ -200,18 +261,18 @@ function Landing() {
       {/* Hero Section — white, no slant */}
       <section className="relative pt-10 pb-16 md:pt-14 md:pb-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-10 md:gap-10 items-center">
-            <div className="max-w-xl">
-              <span
-                className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full mb-6 uppercase tracking-wider"
+          <div className="grid md:grid-cols-2 gap-0 md:gap-10 items-center">
+            <div className="w-full md:max-w-xl order-last md:order-none">
+              <p
+                className="text-sm md:text-base font-bold uppercase"
                 style={{
-                  backgroundColor: "#FFFFFF",
-                  color: COLORS.muted,
-                  border: `1px solid ${COLORS.hairline}`,
+                  color: COLORS.coral,
+                  letterSpacing: "0.14em",
+                  marginBottom: "10px",
                 }}
               >
                 Új képzés
-              </span>
+              </p>
               <h1
                 className="text-5xl md:text-6xl font-bold leading-[1.1] mb-6"
                 style={{ color: COLORS.dark }}
@@ -227,13 +288,21 @@ function Landing() {
               >
                 Tanuld meg, hogyan lesz a zavaros igényből kézzel fogható, tesztelhető prototípus — AI segítségével.
               </p>
-              <PillLink href="#cta" size="lg">Érdekel →</PillLink>
+              <PillLink href="#cta" size="lg" className="w-full sm:w-auto group">
+                Érdekel{" "}
+                <span
+                  aria-hidden="true"
+                  className="inline-block transition-transform group-hover:translate-x-1"
+                >
+                  →
+                </span>
+              </PillLink>
             </div>
-            <div className="flex justify-center md:justify-end">
+            <div className="flex justify-center md:justify-end order-first md:order-none">
               <img
                 src={PROTO_IMG}
                 alt="Mobil app prototípus illusztráció"
-                className="w-full max-w-[540px] h-auto"
+                className="w-4/5 max-w-[432px] md:w-full md:max-w-[540px] h-auto mx-auto md:mx-0"
               />
             </div>
           </div>
@@ -459,11 +528,36 @@ function Landing() {
                 </p>
                 <a
                   href="https://worksdot.hu"
-                  className="inline-flex font-bold items-center gap-1 transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex font-bold items-center gap-1 transition-colors"
                   style={{ color: COLORS.coral }}
                 >
-                  worksdot.hu <span aria-hidden="true">→</span>
+                  worksdot.hu{" "}
+                  <span
+                    aria-hidden="true"
+                    className="inline-block transition-transform group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
                 </a>
+              </div>
+              <div
+                className="mt-4 px-8 md:px-10 py-5 md:py-6 rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4"
+                style={{ backgroundColor: COLORS.warm }}
+              >
+                <span
+                  className="text-base md:text-lg"
+                  style={{ color: COLORS.muted }}
+                >
+                  A képzés díja
+                </span>
+                <span
+                  className="text-xl md:text-2xl font-bold"
+                  style={{ color: COLORS.dark }}
+                >
+                  200 000 Ft / fő
+                </span>
               </div>
             </div>
           </div>
@@ -473,7 +567,7 @@ function Landing() {
       {/* Bottom CTA — warm bg */}
       <section
         id="cta"
-        className="py-16 md:py-24 text-center px-6"
+        className="py-16 md:py-24 text-left md:text-center px-6"
         style={{ backgroundColor: COLORS.warm }}
       >
         <div className="max-w-3xl mx-auto">
@@ -504,37 +598,74 @@ function Landing() {
             </a>
             <div className="flex flex-wrap justify-center gap-6">
               {[
-                { h: "https://worksdot.hu", t: "Főoldal" },
-                { h: "https://www.linkedin.com/company/works.-hungary-kft./", t: "LinkedIn" },
-                { h: "https://worksdot.hu/contact", t: "Kapcsolat" },
+                {
+                  h: "https://worksdot.hu",
+                  t: "Weboldalunk",
+                  icon: (
+                    <svg
+                      aria-hidden="true"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M2 12h20" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                  ),
+                },
+                {
+                  h: "https://www.linkedin.com/company/works.-hungary-kft./posts/?feedView=all",
+                  t: "LinkedIn",
+                  icon: (
+                    <svg
+                      aria-hidden="true"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.26 2.37 4.26 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z" />
+                    </svg>
+                  ),
+                },
               ].map((l) => (
                 <a
                   key={l.t}
                   href={l.h}
-                  className="text-sm font-medium transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
                   style={{ color: "#B8A8BC" }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
                   onMouseLeave={(e) => (e.currentTarget.style.color = "#B8A8BC")}
                 >
+                  {l.icon}
                   {l.t}
                 </a>
               ))}
             </div>
           </div>
-          <div className="text-center md:text-left text-sm" style={{ color: "#8A7A8E" }}>
+          <div className="text-center text-sm" style={{ color: "#8A7A8E" }}>
             Works Hungary Kft. © 2025 ·{" "}
             <a
-              href="https://worksdot.hu/privacy-statement"
+              href={`${import.meta.env.BASE_URL}adatvedelem`}
               className="underline underline-offset-4 transition-colors"
               style={{ color: "#B8A8BC" }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "#B8A8BC")}
             >
-              Adatvédelmi nyilatkozat
+              Adatvédelmi tájékoztató
             </a>
           </div>
         </div>
       </footer>
+      <CookieBanner />
     </div>
   );
 }
@@ -549,6 +680,9 @@ function LeadForm() {
   const [email, setEmail] = useState("");
   const [attendees, setAttendees] = useState("");
   const [message, setMessage] = useState("");
+  // Honeypot: visually hidden field that humans never fill in. If a bot fills
+  // it, the server silently drops the submission.
+  const [website, setWebsite] = useState("");
   const [state, setState] = useState<FormState>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -558,6 +692,7 @@ function LeadForm() {
     setEmail("");
     setAttendees("");
     setMessage("");
+    setWebsite("");
     setState("idle");
     setErrorMsg(null);
   }
@@ -577,6 +712,7 @@ function LeadForm() {
           email: email.trim(),
           attendees: Number(attendees),
           message: message.trim() || undefined,
+          website,
         }),
       });
       if (res.status === 201) {
@@ -621,7 +757,7 @@ function LeadForm() {
           Rögzítettük az érdeklődésedet. Jelentkezünk, amint indul a következő
           csoport.
         </p>
-        <PillButton type="button" onClick={reset}>
+        <PillButton type="button" onClick={reset} className="w-full sm:w-auto">
           Új jelentkezés
         </PillButton>
       </div>
@@ -636,62 +772,86 @@ function LeadForm() {
       onSubmit={handleSubmit}
       noValidate
     >
-      <CtaInput
-        className="sm:col-span-3"
+      <div className="sm:col-span-3">
+        <FieldLabel htmlFor="lead-name" required>Név</FieldLabel>
+        <CtaInput
+          id="lead-name"
+          type="text"
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          autoComplete="name"
+          required
+          disabled={submitting}
+        />
+      </div>
+      <div className="sm:col-span-3">
+        <FieldLabel htmlFor="lead-company" required>Cég</FieldLabel>
+        <CtaInput
+          id="lead-company"
+          type="text"
+          name="company"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
+          autoComplete="organization"
+          required
+          disabled={submitting}
+        />
+      </div>
+      <div className="sm:col-span-3">
+        <FieldLabel htmlFor="lead-email" required>Email cím</FieldLabel>
+        <CtaInput
+          id="lead-email"
+          type="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email@cegnev.hu"
+          autoComplete="email"
+          required
+          disabled={submitting}
+        />
+      </div>
+      <div className="sm:col-span-3">
+        <FieldLabel htmlFor="lead-attendees" required>Érdeklődők száma</FieldLabel>
+        <CtaInput
+          id="lead-attendees"
+          type="number"
+          name="attendees"
+          value={attendees}
+          onChange={(e) => setAttendees(e.target.value)}
+          min={1}
+          required
+          disabled={submitting}
+        />
+      </div>
+      <div className="sm:col-span-6">
+        <FieldLabel htmlFor="lead-message">Üzenet (opcionális)</FieldLabel>
+        <CtaTextarea
+          id="lead-message"
+          name="message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          disabled={submitting}
+        />
+      </div>
+      {/* Honeypot: invisible to humans, irresistible to bots. */}
+      <input
         type="text"
-        name="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Teljes név"
-        autoComplete="name"
-        aria-label="Teljes név"
-        required
-        disabled={submitting}
-      />
-      <CtaInput
-        className="sm:col-span-3"
-        type="text"
-        name="company"
-        value={company}
-        onChange={(e) => setCompany(e.target.value)}
-        placeholder="Cég neve"
-        autoComplete="organization"
-        aria-label="Cég neve"
-        required
-        disabled={submitting}
-      />
-      <CtaInput
-        className="sm:col-span-3"
-        type="email"
-        name="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="email@cegnev.hu"
-        autoComplete="email"
-        aria-label="Email cím"
-        required
-        disabled={submitting}
-      />
-      <CtaInput
-        className="sm:col-span-3"
-        type="number"
-        name="attendees"
-        value={attendees}
-        onChange={(e) => setAttendees(e.target.value)}
-        placeholder="Érdeklődők száma (pl. 3)"
-        aria-label="Érdeklődők száma"
-        min={1}
-        required
-        disabled={submitting}
-      />
-      <CtaTextarea
-        className="sm:col-span-6"
-        name="message"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Üzenet (opcionális) — kérdés, kontextus, bármi amit jó ha tudunk…"
-        aria-label="Üzenet"
-        disabled={submitting}
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: "1px",
+          height: "1px",
+          opacity: 0,
+          pointerEvents: "none",
+        }}
       />
       <PillButton
         type="submit"
@@ -714,6 +874,17 @@ function LeadForm() {
   );
 }
 
+function normalizePath(p: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+  let path = p;
+  if (base && path.startsWith(base)) path = path.slice(base.length) || "/";
+  if (path.length > 1) path = path.replace(/\/+$/, "");
+  return path;
+}
+
 export default function App() {
+  const path =
+    typeof window !== "undefined" ? normalizePath(window.location.pathname) : "/";
+  if (path === "/adatvedelem") return <PrivacyPolicy />;
   return <Landing />;
 }
