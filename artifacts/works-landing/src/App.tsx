@@ -550,13 +550,13 @@ function Landing() {
                   className="text-base md:text-lg"
                   style={{ color: COLORS.muted }}
                 >
-                  A képzés díja
+                  A képzés díja (nettó):
                 </span>
                 <span
                   className="text-xl md:text-2xl font-bold"
                   style={{ color: COLORS.dark }}
                 >
-                  200 000 Ft / fő
+                  179 000 Ft / fő
                 </span>
               </div>
             </div>
